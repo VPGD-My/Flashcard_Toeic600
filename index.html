@@ -135,6 +135,26 @@ h2{font-size:15px;font-weight:600;margin:28px 0 10px;color:var(--muted)}
 .q.ok .verdict{color:var(--know)}
 .q.bad .verdict{color:var(--again)}
 .typed{margin-top:8px;font-size:15px;color:var(--again)}
+.panel{background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:16px}
+.panel .seg{margin-top:0}
+.panel .seg button{font-size:13px;padding:8px 4px}
+.lbl{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:16px 0 6px}
+.lbl-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:16px}
+.lbl-row .lbl{margin:0}
+.catlbl{display:flex;align-items:center;gap:8px;border:0;background:none;padding:12px 0 6px;font-size:14px;font-weight:600;text-align:left}
+.catlbl .tick{width:18px;height:18px;border-radius:5px;border:2px solid var(--line);flex:none}
+.catlbl[aria-pressed="true"] .tick{background:var(--know);border-color:var(--know);box-shadow:inset 0 0 0 2px var(--card)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chipbtn{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-size:13px;line-height:1.3}
+.chipbtn small{color:var(--muted);font-size:11px}
+.chipbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chipbtn[aria-pressed="true"] small{color:inherit;opacity:.75}
+.filterbtn{width:100%;display:flex;align-items:center;gap:8px;margin-top:10px;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:12px 16px;font-weight:600;font-size:15px;text-align:left}
+.filterbtn b{background:var(--ink);color:var(--bg);border-radius:10px;padding:0 8px;font-size:12px;line-height:20px}
+.filterbtn span{margin-left:auto;font-weight:500;font-size:13px;color:var(--muted)}
+.studybar{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:14px;margin:12px 0 4px}
+.studybar>span{display:block;font-size:14px;font-weight:600;margin-bottom:10px}
+.tbadge{display:inline-block;margin-left:6px;font-size:11px;font-weight:600;color:var(--margin);border:1px solid var(--margin);border-radius:6px;padding:0 5px;vertical-align:2px}
 /* nav */
 nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);z-index:20}
 nav .in{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
@@ -153,32 +173,32 @@ nav button .badge{position:absolute;top:-4px;right:-10px;background:var(--margin
 <nav><div class="in" id="nav"></div></nav>
 <div class="toast" id="toast" role="status"></div>
 <script>
-const RAW = {
-1:["Contracts","Hợp đồng",`agreement|n|/əˈɡriːmənt/|thỏa thuận, hợp đồng
+const RAW={
+1:["Contracts","Hợp đồng",`contract|n|/ˈkɑːntrækt/|hợp đồng|contracts|T
+agreement|n|/əˈɡriːmənt/|thỏa thuận, hợp đồng
 party|n|/ˈpɑːrti/|bên (tham gia hợp đồng)
 provision|n|/prəˈvɪʒn/|điều khoản quy định cụ thể
 clause|n|/klɔːz/|điều khoản (một phần hợp đồng)
-agree|v|/əˈɡriː/|đồng ý, nhất trí
+amend|v|/əˈmend/|sửa đổi (hợp đồng, điều khoản)
 obligate|v|/ˈɑːblɪɡeɪt/|bắt buộc, ràng buộc (pháp lý/đạo đức)
 sign|v|/saɪn/|ký tên
 resolve|v|/rɪˈzɑːlv/|giải quyết
 binding|adj|/ˈbaɪndɪŋ/|có tính ràng buộc pháp lý
-contractual|adj|/kənˈtræktʃuəl/|theo hợp đồng
 legal|adj|/ˈliːɡl/|hợp pháp
-legally|adv|/ˈliːɡəli/|một cách hợp pháp`],
-2:["Marketing","Tiếp thị",`market|n|/ˈmɑːrkɪt/|thị trường, nhu cầu về sản phẩm
+breach|n|/briːtʃ/|sự vi phạm (hợp đồng)`],
+2:["Marketing","Tiếp thị",`market|n, v|/ˈmɑːrkɪt/|thị trường (n); tiếp thị, quảng bá và bán (v) · marketing: hoạt động tiếp thị|marketing|T
 competition|n|/ˌkɑːmpəˈtɪʃn/|sự cạnh tranh
 strategy|n|/ˈstrætədʒi/|chiến lược
 customer|n|/ˈkʌstəmər/|khách hàng
+campaign|n|/kæmˈpeɪn/|chiến dịch (quảng cáo)
 advertise|v|/ˈædvərtaɪz/|quảng cáo
 attract|v|/əˈtrækt/|thu hút
 consume|v|/kənˈsuːm/|tiêu dùng, tiêu thụ
-market|v|/ˈmɑːrkɪt/|quảng bá và bán (sản phẩm)
 effective|adj|/ɪˈfektɪv/|hiệu quả
 productive|adj|/prəˈdʌktɪv/|năng suất
 persuasive|adj|/pərˈsweɪsɪv/|có sức thuyết phục
-efficiently|adv|/ɪˈfɪʃəntli/|một cách hiệu quả (ít lãng phí)`],
-3:["Warranties","Bảo hành",`warranty|n|/ˈwɔːrənti/|sự bảo hành, giấy bảo hành
+efficient|adj|/ɪˈfɪʃnt/|hiệu quả, năng suất (ít lãng phí)`],
+3:["Warranties","Bảo hành",`warranty|n|/ˈwɔːrənti/|sự bảo hành, giấy bảo hành|warranties|T
 defect|n|/ˈdiːfekt/|lỗi, khuyết điểm
 claim|n|/kleɪm/|yêu cầu (bảo hành, bồi thường)
 coverage|n|/ˈkʌvərɪdʒ/|phạm vi bảo hành/bảo hiểm
@@ -186,23 +206,25 @@ guarantee|v|/ˌɡærənˈtiː/|cam kết, bảo đảm
 replace|v|/rɪˈpleɪs/|thay thế
 refund|v|/rɪˈfʌnd/|hoàn tiền
 repair|v|/rɪˈper/|sửa chữa
-defective|adj|/dɪˈfektɪv/|bị lỗi
+durable|adj|/ˈdʊrəbl/|bền
 valid|adj|/ˈvælɪd/|có hiệu lực
 expired|adj|/ɪkˈspaɪərd/|hết hạn
-promptly|adv|/ˈprɑːmptli/|ngay lập tức, không chậm trễ`],
-4:["Business Planning","Kế hoạch kinh doanh",`goal|n|/ɡoʊl/|mục tiêu
+prompt|adj|/prɑːmpt/|nhanh chóng, kịp thời`],
+4:["Business Planning","Kế hoạch kinh doanh",`business|n|/ˈbɪznəs/|kinh doanh; doanh nghiệp||T
+plan|v|/plæn/|lên kế hoạch|planning|T
+goal|n|/ɡoʊl/|mục tiêu
 strategy|n|/ˈstrætədʒi/|chiến lược, kế hoạch hành động
-forecast|n|/ˈfɔːrkæst/|dự báo
+forecast|n, v|/ˈfɔːrkæst/|bản dự báo (n); dự báo (v)
 resource|n|/ˈriːsɔːrs/|nguồn lực, tài nguyên
-forecast|v|/ˈfɔːrkæst/|dự đoán, dự báo
-plan|v|/plæn/|lên kế hoạch
 analyze|v|/ˈænəlaɪz/|phân tích
 assess|v|/əˈses/|đánh giá, ước tính
-strategic|adj|/strəˈtiːdʒɪk/|mang tính chiến lược
+feasible|adj|/ˈfiːzəbl/|khả thi
 realistic|adj|/ˌriːəˈlɪstɪk/|thực tế, khả thi
 achievable|adj|/əˈtʃiːvəbl/|có thể đạt được
-effectively|adv|/ɪˈfektɪvli/|một cách hiệu quả`],
-5:["Conferences","Hội nghị",`attendee|n|/əˌtenˈdiː/|người tham dự
+priority|n|/praɪˈɔːrəti/|sự ưu tiên
+objective|n|/əbˈdʒektɪv/|mục tiêu cụ thể`],
+5:["Conferences","Hội nghị",`conference|n|/ˈkɑːnfərəns/|hội nghị||T
+attendee|n|/əˌtenˈdiː/|người tham dự
 schedule|n|/ˈskedʒuːl/|lịch trình
 location|n|/loʊˈkeɪʃn/|địa điểm, vị trí
 venue|n|/ˈvenjuː/|nơi tổ chức sự kiện
@@ -211,10 +233,11 @@ hold|v|/hoʊld/|tổ chức (cuộc họp, sự kiện)
 participate|v|/pɑːrˈtɪsɪpeɪt/|tham gia
 register|v|/ˈredʒɪstər/|đăng ký
 convenient|adj|/kənˈviːniənt/|thuận tiện
-scheduled|adj|/ˈskedʒuːld/|đã lên lịch
-confirmed|adj|/kənˈfɜːrmd/|đã xác nhận
+keynote|n|/ˈkiːnoʊt/|bài phát biểu chính
+confirm|v|/kənˈfɜːrm/|xác nhận
 international|adj|/ˌɪntərˈnæʃnəl/|quốc tế`],
-6:["Computers","Máy tính",`network|n|/ˈnetwɜːrk/|mạng lưới (thiết bị kết nối)
+6:["Computers","Máy tính",`computer|n|/kəmˈpjuːtər/|máy tính||T
+network|n|/ˈnetwɜːrk/|mạng lưới (thiết bị kết nối)
 software|n|/ˈsɔːftwer/|phần mềm
 hardware|n|/ˈhɑːrdwer/|phần cứng
 virus|n|/ˈvaɪrəs/|vi-rút máy tính
@@ -225,32 +248,36 @@ delete|v|/dɪˈliːt/|xóa
 digital|adj|/ˈdɪdʒɪtl/|kỹ thuật số
 compatible|adj|/kəmˈpætəbl/|tương thích
 secure|adj|/sɪˈkjʊr/|an toàn, bảo mật
-automatically|adv|/ˌɔːtəˈmætɪkli/|một cách tự động`],
-7:["Office Technology","Công nghệ văn phòng",`printer|n|/ˈprɪntər/|máy in
+automatic|adj|/ˌɔːtəˈmætɪk/|tự động`],
+7:["Office Technology","Công nghệ văn phòng",`office|n|/ˈɔːfɪs/|văn phòng||T
+technology|n|/tekˈnɑːlədʒi/|công nghệ||T
+printer|n|/ˈprɪntər/|máy in
 scanner|n|/ˈskænər/|máy quét
 photocopier|n|/ˈfoʊtoʊˌkɑːpiər/|máy photocopy
 fax|n|/fæks/|máy fax, bản fax
 operate|v|/ˈɑːpəreɪt/|vận hành
-print|v|/prɪnt/|in
-copy|v|/ˈkɑːpi/|sao chép, photo
-scan|v|/skæn/|quét (tài liệu)
+jam|v|/dʒæm/|kẹt (giấy)
+malfunction|v|/ˌmælˈfʌŋkʃn/|trục trặc, hỏng
+toner|n|/ˈtoʊnər/|mực in (hộp mực)
 functional|adj|/ˈfʌŋkʃənl/|thiết thực, hoạt động được
 advanced|adj|/ədˈvænst/|tiên tiến
-operational|adj|/ˌɑːpəˈreɪʃənl/|đang hoạt động được
-manually|adv|/ˈmænjuəli/|bằng tay, thủ công`],
-8:["Office Procedures","Quy trình văn phòng",`procedure|n|/prəˈsiːdʒər/|thủ tục, quy trình
+user-friendly|adj|/ˌjuːzər ˈfrendli/|dễ sử dụng
+manual|n|/ˈmænjuəl/|sách hướng dẫn sử dụng`],
+8:["Office Procedures","Quy trình văn phòng",`office|n|/ˈɔːfɪs/|văn phòng||T
+procedure|n|/prəˈsiːdʒər/|thủ tục, quy trình|procedures|T
 policy|n|/ˈpɑːləsi/|chính sách
 document|n|/ˈdɑːkjumənt/|tài liệu
-file|n|/faɪl/|hồ sơ, tập tài liệu
+file|n, v|/faɪl/|hồ sơ (n); lưu trữ, nộp (v)
+deadline|n|/ˈdedlaɪn/|hạn chót
 follow|v|/ˈfɑːloʊ/|làm theo, tuân theo
-file|v|/faɪl/|sắp xếp lưu trữ (hồ sơ)
 organize|v|/ˈɔːrɡənaɪz/|sắp xếp, tổ chức
 implement|v|/ˈɪmplɪment/|thực hiện, triển khai
 systematic|adj|/ˌsɪstəˈmætɪk/|có hệ thống
 efficient|adj|/ɪˈfɪʃnt/|hiệu quả, năng suất
 official|adj|/əˈfɪʃl/|chính thức
-normally|adv|/ˈnɔːrməli/|thông thường`],
-9:["Electronics","Điện tử",`device|n|/dɪˈvaɪs/|thiết bị
+normal|adj|/ˈnɔːrml/|thông thường, bình thường`],
+9:["Electronics","Điện tử",`electronic|adj|/ɪˌlekˈtrɑːnɪk/|thuộc về điện tử|electronics|T
+device|n|/dɪˈvaɪs/|thiết bị
 component|n|/kəmˈpoʊnənt/|linh kiện, thành phần
 circuit|n|/ˈsɜːrkɪt/|mạch điện
 voltage|n|/ˈvoʊltɪdʒ/|điện áp
@@ -258,14 +285,14 @@ transmit|v|/trænzˈmɪt/|truyền (tín hiệu)
 convert|v|/kənˈvɜːrt/|chuyển đổi
 install|v|/ɪnˈstɔːl/|lắp đặt, cài đặt
 operate|v|/ˈɑːpəreɪt/|điều khiển, vận hành
-electronic|adj|/ɪˌlekˈtrɑːnɪk/|thuộc về điện tử
 wireless|adj|/ˈwaɪərləs/|không dây
 automated|adj|/ˈɔːtəmeɪtɪd/|tự động hóa
 sophisticated|adj|/səˈfɪstɪkeɪtɪd/|tinh vi, phức tạp`],
-10:["Correspondence","Thư từ",`letter|n|/ˈletər/|lá thư
+10:["Correspondence","Thư từ",`correspondence|n|/ˌkɔːrəˈspɑːndəns/|thư từ, sự trao đổi thư từ||T
+letter|n|/ˈletər/|lá thư
 email|n|/ˈiːmeɪl/|thư điện tử
 memo|n|/ˈmemoʊ/|bản ghi nhớ (nội bộ)
-recipient|n|/rɪˈsɪpiənt/|người nhận
+attachment|n|/əˈtætʃmənt/|tệp đính kèm
 compose|v|/kəmˈpoʊz/|soạn (thư, văn bản)
 send|v|/send/|gửi
 receive|v|/rɪˈsiːv/|nhận
@@ -273,45 +300,47 @@ reply|v|/rɪˈplaɪ/|trả lời, hồi âm
 formal|adj|/ˈfɔːrml/|trang trọng
 urgent|adj|/ˈɜːrdʒənt/|khẩn cấp
 brief|adj|/briːf/|ngắn gọn
-annually|adv|/ˈænjuəli/|hằng năm`],
-11:["Job Advertising and Recruiting","Đăng tuyển & tuyển dụng",`candidate|n|/ˈkændɪdət/|ứng viên
+annual|adj|/ˈænjuəl/|hằng năm`],
+11:["Job Advertising and Recruiting","Đăng tuyển & tuyển dụng",`job|n|/dʒɑːb/|công việc, việc làm||T
+recruit|v|/rɪˈkruːt/|tuyển dụng|recruiting|T
+advertise|v|/ˈædvərtaɪz/|đăng tin (tuyển dụng)|advertising|T
+candidate|n|/ˈkændɪdət/|ứng viên
 resume|n|/ˈrezəmeɪ/|sơ yếu lý lịch (CV)
 vacancy|n|/ˈveɪkənsi/|vị trí còn trống
 qualification|n|/ˌkwɑːlɪfɪˈkeɪʃn/|bằng cấp, trình độ chuyên môn
-recruit|v|/rɪˈkruːt/|tuyển dụng
-advertise|v|/ˈædvərtaɪz/|đăng tin (tuyển dụng)
 apply|v|/əˈplaɪ/|nộp đơn, ứng tuyển
 shortlist|v|/ˈʃɔːrtlɪst/|chọn vào danh sách rút gọn
 suitable|adj|/ˈsuːtəbl/|phù hợp
 experienced|adj|/ɪkˈspɪriənst/|có kinh nghiệm
 competitive|adj|/kəmˈpetətɪv/|cạnh tranh (lương, thị trường)
-successfully|adv|/səkˈsesfəli/|một cách thành công`],
-12:["Applying and Interviewing","Ứng tuyển & phỏng vấn",`application|n|/ˌæplɪˈkeɪʃn/|đơn ứng tuyển
-interview|n|/ˈɪntərvjuː/|buổi phỏng vấn
+requirement|n|/rɪˈkwaɪərmənt/|yêu cầu, điều kiện`],
+12:["Applying and Interviewing","Ứng tuyển & phỏng vấn",`apply|v|/əˈplaɪ/|nộp đơn, ứng tuyển|applying|T
+interview|n, v|/ˈɪntərvjuː/|buổi phỏng vấn (n); phỏng vấn (v)|interviewing|T
+application|n|/ˌæplɪˈkeɪʃn/|đơn ứng tuyển
 reference|n|/ˈrefrəns/|người giới thiệu, thư giới thiệu
 portfolio|n|/pɔːrtˈfoʊlioʊ/|hồ sơ năng lực (mẫu công việc)
+impression|n|/ɪmˈpreʃn/|ấn tượng
 submit|v|/səbˈmɪt/|nộp
-interview|v|/ˈɪntərvjuː/|phỏng vấn
 evaluate|v|/ɪˈvæljueɪt/|đánh giá
 prepare|v|/prɪˈper/|chuẩn bị
 confident|adj|/ˈkɑːnfɪdənt/|tự tin
 professional|adj|/prəˈfeʃənl/|chuyên nghiệp
 qualified|adj|/ˈkwɑːlɪfaɪd/|đủ tiêu chuẩn, có năng lực
-thoroughly|adv|/ˈθɜːroʊli/|một cách kỹ lưỡng`],
-13:["Hiring and Training","Tuyển dụng & đào tạo",`hire|n|/ˈhaɪər/|người mới được tuyển
+thorough|adj|/ˈθɜːroʊ/|kỹ lưỡng`],
+13:["Hiring and Training","Tuyển dụng & đào tạo",`hire|n, v|/ˈhaɪər/|người mới được tuyển (n); thuê, tuyển (v)|hiring|T
+training|n|/ˈtreɪnɪŋ/|sự đào tạo||T
 orientation|n|/ˌɔːriənˈteɪʃn/|buổi định hướng cho nhân viên mới
-training|n|/ˈtreɪnɪŋ/|sự đào tạo
 probation|n|/proʊˈbeɪʃn/|thời gian thử việc
-hire|v|/ˈhaɪər/|thuê, tuyển dụng
-train|v|/treɪn/|đào tạo
+workshop|n|/ˈwɜːrkʃɑːp/|buổi hội thảo thực hành
+onboard|v|/ˈɑːnbɔːrd/|giúp nhân viên mới hòa nhập
 coach|v|/koʊtʃ/|hướng dẫn, kèm cặp
 mentor|v|/ˈmentɔːr/|cố vấn, dìu dắt
 skilled|adj|/skɪld/|lành nghề
 inexperienced|adj|/ˌɪnɪkˈspɪriənst/|thiếu kinh nghiệm
 knowledgeable|adj|/ˈnɑːlɪdʒəbl/|hiểu biết rộng
-adequately|adv|/ˈædɪkwətli/|một cách đầy đủ, thỏa đáng`],
-14:["Salaries and Benefits","Lương & phúc lợi",`salary|n|/ˈsæləri/|tiền lương (cố định)
-benefit|n|/ˈbenɪfɪt/|phúc lợi, lợi ích
+adequate|adj|/ˈædɪkwət/|đầy đủ, thỏa đáng`],
+14:["Salaries and Benefits","Lương & phúc lợi",`salary|n|/ˈsæləri/|tiền lương (cố định)|salaries|T
+benefit|n|/ˈbenɪfɪt/|phúc lợi, lợi ích|benefits|T
 compensation|n|/ˌkɑːmpenˈseɪʃn/|tiền thù lao, bồi thường
 deduction|n|/dɪˈdʌkʃn/|khoản khấu trừ (vào lương)
 earn|v|/ɜːrn/|kiếm được (tiền)
@@ -321,20 +350,21 @@ increase|v|/ɪnˈkriːs/|tăng
 generous|adj|/ˈdʒenərəs/|hào phóng
 attractive|adj|/əˈtræktɪv/|hấp dẫn (mức lương, đãi ngộ)
 additional|adj|/əˈdɪʃənl/|thêm, bổ sung
-significantly|adv|/sɪɡˈnɪfɪkəntli/|đáng kể`],
-15:["Promotions, Pensions, and Awards","Thăng chức, hưu trí & khen thưởng",`promotion|n|/prəˈmoʊʃn/|sự thăng chức
-pension|n|/ˈpenʃn/|lương hưu
-award|n|/əˈwɔːrd/|giải thưởng
+raise|n|/reɪz/|sự tăng lương`],
+15:["Promotions, Pensions, and Awards","Thăng chức, hưu trí & khen thưởng",`promotion|n|/prəˈmoʊʃn/|sự thăng chức|promotions|T
+pension|n|/ˈpenʃn/|lương hưu|pensions|T
+award|n, v|/əˈwɔːrd/|giải thưởng (n); trao giải (v)|awards|T
 recognition|n|/ˌrekəɡˈnɪʃn/|sự ghi nhận, công nhận
-promote|v|/prəˈmoʊt/|thăng chức
-award|v|/əˈwɔːrd/|trao giải thưởng
+dedicate|v|/ˈdedɪkeɪt/|cống hiến
 retire|v|/rɪˈtaɪər/|nghỉ hưu
 achieve|v|/əˈtʃiːv/|đạt được
 deserving|adj|/dɪˈzɜːrvɪŋ/|xứng đáng
 eligible|adj|/ˈelɪdʒəbl/|đủ điều kiện
 outstanding|adj|/aʊtˈstændɪŋ/|xuất sắc, nổi bật
-formally|adv|/ˈfɔːrməli/|một cách chính thức`],
-16:["Shopping","Mua sắm",`product|n|/ˈprɑːdʌkt/|sản phẩm
+ceremony|n|/ˈserəmoʊni/|buổi lễ
+bonus|n|/ˈboʊnəs/|tiền thưởng`],
+16:["Shopping","Mua sắm",`shop|v|/ʃɑːp/|mua sắm|shopping|T
+product|n|/ˈprɑːdʌkt/|sản phẩm
 price|n|/praɪs/|giá
 discount|n|/ˈdɪskaʊnt/|sự giảm giá
 receipt|n|/rɪˈsiːt/|biên lai
@@ -345,44 +375,45 @@ return|v|/rɪˈtɜːrn/|trả lại (hàng)
 affordable|adj|/əˈfɔːrdəbl/|giá phải chăng
 available|adj|/əˈveɪləbl/|có sẵn
 reasonable|adj|/ˈriːznəbl/|hợp lý (giá cả)
-economically|adv|/ˌekəˈnɑːmɪkli/|về mặt kinh tế; tiết kiệm`],
-17:["Ordering Supplies","Đặt hàng vật tư",`supplier|n|/səˈplaɪər/|nhà cung cấp
-supplies|n|/səˈplaɪz/|đồ dùng, vật tư
-order|n|/ˈɔːrdər/|đơn đặt hàng
+checkout|n|/ˈtʃekaʊt/|quầy thanh toán`],
+17:["Ordering Supplies","Đặt hàng vật tư",`supply|n|/səˈplaɪ/|đồ dùng, vật tư (thường dùng số nhiều: supplies)|supplies|T
+order|n, v|/ˈɔːrdər/|đơn hàng (n); đặt hàng (v)|ordering|T
+supplier|n|/səˈplaɪər/|nhà cung cấp
+stationery|n|/ˈsteɪʃəneri/|văn phòng phẩm
 shipment|n|/ˈʃɪpmənt/|lô hàng
-order|v|/ˈɔːrdər/|đặt hàng
 deliver|v|/dɪˈlɪvər/|giao hàng
 restock|v|/ˌriːˈstɑːk/|bổ sung hàng
 fulfill|v|/fʊlˈfɪl/|hoàn tất, đáp ứng (đơn hàng)
 sufficient|adj|/səˈfɪʃnt/|đủ
 backordered|adj|/ˈbækɔːrdərd/|đã đặt nhưng tạm hết hàng
 bulk|adj|/bʌlk/|số lượng lớn (mua sỉ)
-conveniently|adv|/kənˈviːniəntli/|một cách thuận tiện`],
-18:["Shipping","Vận chuyển",`cargo|n|/ˈkɑːrɡoʊ/|hàng hóa (trên tàu, máy bay)
+catalog|n|/ˈkætəlɔːɡ/|danh mục sản phẩm
+quote|n|/kwoʊt/|bảng báo giá`],
+18:["Shipping","Vận chuyển",`ship|v|/ʃɪp/|vận chuyển, gửi hàng|shipping|T
+cargo|n|/ˈkɑːrɡoʊ/|hàng hóa (trên tàu, máy bay)
 freight|n|/freɪt/|hàng hóa vận chuyển; cước phí
 warehouse|n|/ˈwerhaʊs/|nhà kho
 carrier|n|/ˈkæriər/|hãng vận chuyển
-ship|v|/ʃɪp/|vận chuyển, gửi hàng
 track|v|/træk/|theo dõi (đơn hàng)
 package|v|/ˈpækɪdʒ/|đóng gói
 dispatch|v|/dɪˈspætʃ/|gửi đi, điều phối
 domestic|adj|/dəˈmestɪk/|trong nước, nội địa
 express|adj|/ɪkˈspres/|hỏa tốc, chuyển phát nhanh
 fragile|adj|/ˈfrædʒl/|dễ vỡ
-instantly|adv|/ˈɪnstəntli/|ngay lập tức`],
-19:["Invoices","Hóa đơn",`invoice|n|/ˈɪnvɔɪs/|hóa đơn (liệt kê hàng và chi phí)
+label|n|/ˈleɪbl/|nhãn (dán hàng)`],
+19:["Invoices","Hóa đơn",`invoice|n|/ˈɪnvɔɪs/|hóa đơn (liệt kê hàng và chi phí)|invoices|T
 bill|n|/bɪl/|hóa đơn, phiếu tính tiền
 payment|n|/ˈpeɪmənt/|sự thanh toán
 due date|n|/ˈduː deɪt/|ngày đến hạn
 issue|v|/ˈɪʃuː/|phát hành, xuất (hóa đơn)
 charge|v|/tʃɑːrdʒ/|tính phí
-pay|v|/peɪ/|trả tiền
+remit|v|/rɪˈmɪt/|chuyển tiền thanh toán
 settle|v|/ˈsetl/|thanh toán (khoản nợ)
 outstanding|adj|/aʊtˈstændɪŋ/|chưa thanh toán
 overdue|adj|/ˌoʊvərˈduː/|quá hạn
 accurate|adj|/ˈækjərət/|chính xác
 certified|adj|/ˈsɜːrtɪfaɪd/|được chứng nhận`],
-20:["Inventory","Hàng tồn kho",`inventory|n|/ˈɪnvəntɔːri/|hàng tồn kho; việc kiểm kê
+20:["Inventory","Hàng tồn kho",`inventory|n|/ˈɪnvəntɔːri/|hàng tồn kho; việc kiểm kê||T
 stock|n|/stɑːk/|hàng trong kho
 supply|n|/səˈplaɪ/|nguồn cung
 shortage|n|/ˈʃɔːrtɪdʒ/|sự thiếu hụt
@@ -392,57 +423,60 @@ update|v|/ˌʌpˈdeɪt/|cập nhật
 dispose|v|/dɪˈspoʊz/|loại bỏ, vứt bỏ (+ of)
 remain|v|/rɪˈmeɪn/|còn lại
 out-of-stock|adj|/ˌaʊt əv ˈstɑːk/|hết hàng
-temporarily|adv|/ˌtempəˈrerəli/|tạm thời
-consistently|adv|/kənˈsɪstəntli/|một cách đều đặn, nhất quán`],
-21:["Banking","Ngân hàng",`account|n|/əˈkaʊnt/|tài khoản
-deposit|n|/dɪˈpɑːzɪt/|tiền gửi; tiền đặt cọc
+temporary|adj|/ˈtempəreri/|tạm thời
+surplus|n|/ˈsɜːrpləs/|lượng dư thừa`],
+21:["Banking","Ngân hàng",`bank|n|/bæŋk/|ngân hàng|banking|T
+account|n|/əˈkaʊnt/|tài khoản
+deposit|n, v|/dɪˈpɑːzɪt/|tiền gửi, tiền cọc (n); gửi tiền (v)
 balance|n|/ˈbæləns/|số dư
 transaction|n|/trænˈzækʃn/|giao dịch
 withdraw|v|/wɪðˈdrɔː/|rút (tiền)
-deposit|v|/dɪˈpɑːzɪt/|gửi (tiền vào tài khoản)
 transfer|v|/trænsˈfɜːr/|chuyển (tiền)
 lend|v|/lend/|cho vay
 borrow|v|/ˈbɑːroʊ/|vay, mượn
 financial|adj|/faɪˈnænʃl/|thuộc về tài chính
 online|adj|/ˌɑːnˈlaɪn/|trực tuyến
-securely|adv|/sɪˈkjʊrli/|một cách an toàn`],
-22:["Accounting","Kế toán",`ledger|n|/ˈledʒər/|sổ cái
+interest|n|/ˈɪntrəst/|tiền lãi
+loan|n|/loʊn/|khoản vay`],
+22:["Accounting","Kế toán",`accounting|n|/əˈkaʊntɪŋ/|kế toán (công việc, ngành)||T
+ledger|n|/ˈledʒər/|sổ cái
 budget|n|/ˈbʌdʒɪt/|ngân sách
 expense|n|/ɪkˈspens/|chi phí
-audit|n|/ˈɔːdɪt/|cuộc kiểm toán
-audit|v|/ˈɔːdɪt/|kiểm toán
+audit|n, v|/ˈɔːdɪt/|cuộc kiểm toán (n); kiểm toán (v)
+payroll|n|/ˈpeɪroʊl/|bảng lương
 calculate|v|/ˈkælkjuleɪt/|tính toán
 record|v|/rɪˈkɔːrd/|ghi chép
 reconcile|v|/ˈrekənsaɪl/|đối chiếu (sổ sách)
 consistent|adj|/kənˈsɪstənt/|nhất quán
 fiscal|adj|/ˈfɪskl/|thuộc tài chính (năm tài chính)
 precise|adj|/prɪˈsaɪs/|chính xác, tỉ mỉ
-meticulously|adv|/məˈtɪkjələsli/|một cách tỉ mỉ`],
-23:["Investments","Đầu tư",`asset|n|/ˈæset/|tài sản
+meticulous|adj|/məˈtɪkjələs/|tỉ mỉ`],
+23:["Investments","Đầu tư",`invest|v|/ɪnˈvest/|đầu tư|investments|T
+asset|n|/ˈæset/|tài sản
 portfolio|n|/pɔːrtˈfoʊlioʊ/|danh mục đầu tư
 bond|n|/bɑːnd/|trái phiếu
 stock|n|/stɑːk/|cổ phiếu
-invest|v|/ɪnˈvest/|đầu tư
 diversify|v|/daɪˈvɜːrsɪfaɪ/|đa dạng hóa
 risk|v|/rɪsk/|mạo hiểm, đánh liều
 allocate|v|/ˈæləkeɪt/|phân bổ
 profitable|adj|/ˈprɑːfɪtəbl/|có lợi nhuận
 speculative|adj|/ˈspekjələtɪv/|mang tính đầu cơ, rủi ro cao
 long-term|adj|/ˌlɔːŋ ˈtɜːrm/|dài hạn
-strategically|adv|/strəˈtiːdʒɪkli/|một cách chiến lược`],
-24:["Taxes","Thuế",`tax|n|/tæks/|thuế
+dividend|n|/ˈdɪvɪdend/|cổ tức`],
+24:["Taxes","Thuế",`tax|n|/tæks/|thuế|taxes|T
 deduction|n|/dɪˈdʌkʃn/|khoản giảm trừ (thu nhập chịu thuế)
 refund|n|/ˈriːfʌnd/|tiền hoàn lại
 liability|n|/ˌlaɪəˈbɪləti/|nghĩa vụ, trách nhiệm pháp lý
 file|v|/faɪl/|nộp (tờ khai thuế)
-deduct|v|/dɪˈdʌkt/|khấu trừ
+penalty|n|/ˈpenəlti/|tiền phạt
 withhold|v|/wɪðˈhoʊld/|giữ lại, khấu trừ tại nguồn
 owe|v|/oʊ/|nợ
-taxable|adj|/ˈtæksəbl/|chịu thuế
-deductible|adj|/dɪˈdʌktəbl/|được khấu trừ
+income|n|/ˈɪnkʌm/|thu nhập
+return|n|/rɪˈtɜːrn/|tờ khai thuế (tax return)
 exempt|adj|/ɪɡˈzempt/|được miễn
-accurately|adv|/ˈækjərətli/|một cách chính xác`],
-25:["Financial Statements","Báo cáo tài chính",`statement|n|/ˈsteɪtmənt/|bản sao kê, báo cáo
+accountant|n|/əˈkaʊntənt/|kế toán viên`],
+25:["Financial Statements","Báo cáo tài chính",`financial|adj|/faɪˈnænʃl/|thuộc về tài chính||T
+statement|n|/ˈsteɪtmənt/|bản sao kê, báo cáo|statements|T
 balance sheet|n|/ˈbæləns ʃiːt/|bảng cân đối kế toán
 income statement|n|/ˈɪnkʌm ˈsteɪtmənt/|báo cáo kết quả kinh doanh
 revenue|n|/ˈrevənuː/|doanh thu
@@ -453,9 +487,9 @@ project|v|/prəˈdʒekt/|dự tính, ước tính
 detailed|adj|/ˈdiːteɪld/|chi tiết
 quarterly|adj|/ˈkwɔːrtərli/|hằng quý
 net|adj|/net/|ròng (lợi nhuận ròng)
-regularly|adv|/ˈreɡjələrli/|thường xuyên, đều đặn`],
-26:["Property and Departments","Tài sản & phòng ban",`property|n|/ˈprɑːpərti/|bất động sản, tài sản
-department|n|/dɪˈpɑːrtmənt/|phòng ban
+profit|n|/ˈprɑːfɪt/|lợi nhuận`],
+26:["Property and Departments","Tài sản & phòng ban",`property|n|/ˈprɑːpərti/|bất động sản, tài sản||T
+department|n|/dɪˈpɑːrtmənt/|phòng ban|departments|T
 facility|n|/fəˈsɪləti/|cơ sở, trang thiết bị
 headquarters|n|/ˈhedkwɔːrtərz/|trụ sở chính
 manage|v|/ˈmænɪdʒ/|quản lý
@@ -465,10 +499,12 @@ relocate|v|/ˌriːˈloʊkeɪt/|di dời, chuyển địa điểm
 commercial|adj|/kəˈmɜːrʃl/|thương mại
 residential|adj|/ˌrezɪˈdenʃl/|dân cư, để ở
 spacious|adj|/ˈspeɪʃəs/|rộng rãi
-properly|adv|/ˈprɑːpərli/|đúng cách, phù hợp`],
-27:["Board Meetings and Committees","Họp hội đồng & ủy ban",`agenda|n|/əˈdʒendə/|chương trình nghị sự
+proper|adj|/ˈprɑːpər/|đúng đắn, phù hợp`],
+27:["Board Meetings and Committees","Họp hội đồng & ủy ban",`board|n|/bɔːrd/|hội đồng quản trị|board meetings|T
+meeting|n|/ˈmiːtɪŋ/|cuộc họp|meetings|T
+committee|n|/kəˈmɪti/|ủy ban|committees|T
+agenda|n|/əˈdʒendə/|chương trình nghị sự
 minutes|n|/ˈmɪnɪts/|biên bản cuộc họp
-committee|n|/kəˈmɪti/|ủy ban
 quorum|n|/ˈkwɔːrəm/|số đại biểu tối thiểu
 convene|v|/kənˈviːn/|triệu tập (họp)
 vote|v|/voʊt/|bỏ phiếu
@@ -477,44 +513,48 @@ adjourn|v|/əˈdʒɜːrn/|hoãn, kết thúc (cuộc họp)
 formal|adj|/ˈfɔːrml/|chính thức, trang trọng
 unanimous|adj|/juˈnænɪməs/|nhất trí hoàn toàn
 executive|adj|/ɪɡˈzekjətɪv/|thuộc ban điều hành
-briefly|adv|/ˈbriːfli/|một cách ngắn gọn`],
-28:["Quality Control","Kiểm soát chất lượng",`quality|n|/ˈkwɑːləti/|chất lượng
+chairperson|n|/ˈtʃerpɜːrsn/|chủ tọa`],
+28:["Quality Control","Kiểm soát chất lượng",`control|n, v|/kənˈtroʊl/|sự kiểm soát (n); kiểm soát (v)||T
+quality|n|/ˈkwɑːləti/|chất lượng||T
 standard|n|/ˈstændərd/|tiêu chuẩn
 inspection|n|/ɪnˈspekʃn/|sự kiểm tra
 defect|n|/ˈdiːfekt/|khiếm khuyết, lỗi
-inspect|v|/ɪnˈspekt/|kiểm tra, thanh tra
+monitor|v|/ˈmɑːnɪtər/|giám sát, theo dõi
 test|v|/test/|thử nghiệm
 comply|v|/kəmˈplaɪ/|tuân thủ (+ with)
 correct|v|/kəˈrekt/|sửa lỗi
 reliable|adj|/rɪˈlaɪəbl/|đáng tin cậy
-defective|adj|/dɪˈfektɪv/|bị lỗi
-high-quality|adj|/ˌhaɪ ˈkwɑːləti/|chất lượng cao
-approved|adj|/əˈpruːvd/|được phê duyệt`],
-29:["Product Development","Phát triển sản phẩm",`prototype|n|/ˈproʊtətaɪp/|nguyên mẫu
+flawless|adj|/ˈflɔːləs/|hoàn hảo, không tì vết
+strict|adj|/strɪkt/|nghiêm ngặt
+approve|v|/əˈpruːv/|phê duyệt`],
+29:["Product Development","Phát triển sản phẩm",`product|n|/ˈprɑːdʌkt/|sản phẩm||T
+develop|v|/dɪˈveləp/|phát triển|development|T
+prototype|n|/ˈproʊtətaɪp/|nguyên mẫu
 feature|n|/ˈfiːtʃər/|tính năng, đặc điểm
 innovation|n|/ˌɪnəˈveɪʃn/|sự đổi mới, sáng kiến
 specification|n|/ˌspesɪfɪˈkeɪʃn/|thông số kỹ thuật
-develop|v|/dɪˈveləp/|phát triển
 design|v|/dɪˈzaɪn/|thiết kế
 enhance|v|/ɪnˈhæns/|nâng cao, cải thiện
 launch|v|/lɔːntʃ/|ra mắt (sản phẩm)
-innovative|adj|/ˈɪnəveɪtɪv/|đổi mới, sáng tạo
+patent|n|/ˈpætnt/|bằng sáng chế
 marketable|adj|/ˈmɑːrkɪtəbl/|có thể bán được
 competitive|adj|/kəmˈpetətɪv/|có sức cạnh tranh
-enhanced|adj|/ɪnˈhænst/|được cải tiến`],
-30:["Renting and Leasing","Thuê & cho thuê",`lease|n|/liːs/|hợp đồng thuê
+cutting-edge|adj|/ˌkʌtɪŋ ˈedʒ/|tiên tiến nhất`],
+30:["Renting and Leasing","Thuê & cho thuê",`lease|n, v|/liːs/|hợp đồng thuê (n); cho thuê, thuê (v)|leasing|T
+rent|n, v|/rent/|tiền thuê (n); thuê (v)|renting|T
 tenant|n|/ˈtenənt/|người thuê nhà
 landlord|n|/ˈlændlɔːrd/|chủ nhà (cho thuê)
-rent|n|/rent/|tiền thuê
-lease|v|/liːs/|cho thuê; thuê (dài hạn)
-rent|v|/rent/|thuê
+utilities|n|/juːˈtɪlətiz/|điện nước, tiện ích
+agent|n|/ˈeɪdʒənt/|người môi giới
 occupy|v|/ˈɑːkjupaɪ/|cư trú, chiếm dụng
 terminate|v|/ˈtɜːrmɪneɪt/|chấm dứt (hợp đồng)
 renew|v|/rɪˈnuː/|gia hạn
 vacant|adj|/ˈveɪkənt/|còn trống
 furnished|adj|/ˈfɜːrnɪʃt/|có sẵn nội thất
-rent-free|adv|/ˌrent ˈfriː/|miễn tiền thuê`],
-31:["Selecting a Restaurant","Chọn nhà hàng",`reservation|n|/ˌrezərˈveɪʃn/|sự đặt chỗ
+monthly|adj|/ˈmʌnθli/|hằng tháng`],
+31:["Selecting a Restaurant","Chọn nhà hàng",`select|v|/sɪˈlekt/|chọn lựa|selecting|T
+restaurant|n|/ˈrestərɑːnt/|nhà hàng||T
+reservation|n|/ˌrezərˈveɪʃn/|sự đặt chỗ
 cuisine|n|/kwɪˈziːn/|ẩm thực, phong cách nấu
 ambiance|n|/ˈæmbiəns/|bầu không khí
 service|n|/ˈsɜːrvɪs/|dịch vụ, sự phục vụ
@@ -525,8 +565,9 @@ request|v|/rɪˈkwest/|yêu cầu
 delicious|adj|/dɪˈlɪʃəs/|ngon
 high-class|adj|/ˌhaɪ ˈklæs/|cao cấp
 casual|adj|/ˈkæʒuəl/|bình dân, thoải mái
-locally|adv|/ˈloʊkəli/|tại địa phương`],
-32:["Eating Out","Ăn ngoài",`appetizer|n|/ˈæpɪtaɪzər/|món khai vị
+local|adj|/ˈloʊkl/|thuộc địa phương`],
+32:["Eating Out","Ăn ngoài",`eat out|v|/iːt aʊt/|ăn ở ngoài (nhà hàng)|eating out|T
+appetizer|n|/ˈæpɪtaɪzər/|món khai vị
 entrée|n|/ˈɑːntreɪ/|món chính
 menu|n|/ˈmenjuː/|thực đơn
 check|n|/tʃek/|hóa đơn (ở nhà hàng)
@@ -537,8 +578,10 @@ reserve|v|/rɪˈzɜːrv/|đặt trước (bàn)
 savory|adj|/ˈseɪvəri/|đậm đà, mặn
 crowded|adj|/ˈkraʊdɪd/|đông đúc
 courteous|adj|/ˈkɜːrtiəs/|lịch sự, nhã nhặn
-promptly|adv|/ˈprɑːmptli/|nhanh chóng, đúng giờ`],
-33:["Ordering Lunch","Đặt bữa trưa",`delivery|n|/dɪˈlɪvəri/|sự giao hàng
+dessert|n|/dɪˈzɜːrt/|món tráng miệng`],
+33:["Ordering Lunch","Đặt bữa trưa",`order|v|/ˈɔːrdər/|gọi món, đặt (đồ ăn)|ordering|T
+lunch|n|/lʌntʃ/|bữa trưa||T
+delivery|n|/dɪˈlɪvəri/|sự giao hàng
 beverage|n|/ˈbevərɪdʒ/|đồ uống
 portion|n|/ˈpɔːrʃn/|khẩu phần
 tray|n|/treɪ/|khay
@@ -549,32 +592,35 @@ queue|v|/kjuː/|xếp hàng
 separate|adj|/ˈseprət/|riêng biệt
 convenient|adj|/kənˈviːniənt/|tiện lợi
 quick|adj|/kwɪk/|nhanh
-freshly|adv|/ˈfreʃli/|vừa mới (làm, nấu)`],
-34:["Cooking as a Career","Nghề nấu ăn",`chef|n|/ʃef/|đầu bếp chuyên nghiệp
+fresh|adj|/freʃ/|tươi`],
+34:["Cooking as a Career","Nghề nấu ăn",`career|n|/kəˈrɪr/|sự nghiệp, nghề nghiệp||T
+cook|v|/kʊk/|nấu|cooking|T
+chef|n|/ʃef/|đầu bếp chuyên nghiệp
 recipe|n|/ˈresəpi/|công thức nấu ăn
 ingredient|n|/ɪnˈɡriːdiənt/|nguyên liệu
 kitchen|n|/ˈkɪtʃɪn/|nhà bếp
-cook|v|/kʊk/|nấu
 bake|v|/beɪk/|nướng (bằng lò)
 specialize|v|/ˈspeʃəlaɪz/|chuyên về (+ in)
 season|v|/ˈsiːzn/|nêm gia vị
 creative|adj|/kriˈeɪtɪv/|sáng tạo
 skilled|adj|/skɪld/|lành nghề
 passionate|adj|/ˈpæʃənət/|đam mê
-professionally|adv|/prəˈfeʃənəli/|một cách chuyên nghiệp`],
-35:["Events","Sự kiện",`event|n|/ɪˈvent/|sự kiện
+utensil|n|/juːˈtensl/|dụng cụ nhà bếp`],
+35:["Events","Sự kiện",`event|n|/ɪˈvent/|sự kiện|events|T
 venue|n|/ˈvenjuː/|địa điểm tổ chức
-organizer|n|/ˈɔːrɡənaɪzər/|người tổ chức
-attendee|n|/əˌtenˈdiː/|người tham dự
+sponsor|n|/ˈspɑːnsər/|nhà tài trợ
+invitation|n|/ˌɪnvɪˈteɪʃn/|lời mời
 organize|v|/ˈɔːrɡənaɪz/|tổ chức
 schedule|v|/ˈskedʒuːl/|lên lịch
 host|v|/hoʊst/|đăng cai, tổ chức
 attend|v|/əˈtend/|tham dự
 successful|adj|/səkˈsesfl/|thành công
-organized|adj|/ˈɔːrɡənaɪzd/|ngăn nắp, có tổ chức
+festive|adj|/ˈfestɪv/|mang không khí lễ hội
 memorable|adj|/ˈmemərəbl/|đáng nhớ
-smoothly|adv|/ˈsmuːðli/|suôn sẻ`],
-36:["General Travel","Du lịch chung",`itinerary|n|/aɪˈtɪnəreri/|lịch trình
+smooth|adj|/smuːð/|suôn sẻ`],
+36:["General Travel","Du lịch chung",`general|adj|/ˈdʒenrəl/|chung, tổng quát||T
+travel|n, v|/ˈtrævl/|việc đi lại, du lịch (n); đi du lịch (v)||T
+itinerary|n|/aɪˈtɪnəreri/|lịch trình
 passport|n|/ˈpæspɔːrt/|hộ chiếu
 reservation|n|/ˌrezərˈveɪʃn/|sự đặt chỗ
 fare|n|/fer/|giá vé
@@ -586,7 +632,8 @@ scenic|adj|/ˈsiːnɪk/|có phong cảnh đẹp
 comfortable|adj|/ˈkʌmftəbl/|thoải mái
 round-trip|adj|/ˌraʊnd ˈtrɪp/|khứ hồi
 abroad|adv|/əˈbrɔːd/|ở nước ngoài`],
-37:["Airlines","Hàng không",`flight|n|/flaɪt/|chuyến bay
+37:["Airlines","Hàng không",`airline|n|/ˈerlaɪn/|hãng hàng không|airlines|T
+flight|n|/flaɪt/|chuyến bay
 boarding pass|n|/ˈbɔːrdɪŋ pæs/|thẻ lên máy bay
 gate|n|/ɡeɪt/|cửa ra máy bay
 baggage|n|/ˈbæɡɪdʒ/|hành lý
@@ -598,7 +645,8 @@ domestic|adj|/dəˈmestɪk/|nội địa
 complimentary|adj|/ˌkɑːmplɪˈmentri/|miễn phí (tặng kèm)
 on-time|adj|/ˌɑːn ˈtaɪm/|đúng giờ
 aboard|adv|/əˈbɔːrd/|trên (máy bay, tàu)`],
-38:["Trains","Tàu hỏa",`route|n|/ruːt/|tuyến đường
+38:["Trains","Tàu hỏa",`train|n|/treɪn/|tàu hỏa|trains|T
+route|n|/ruːt/|tuyến đường
 fare|n|/fer/|giá vé
 passenger|n|/ˈpæsɪndʒər/|hành khách
 platform|n|/ˈplætfɔːrm/|sân ga
@@ -609,8 +657,9 @@ transfer|v|/trænsˈfɜːr/|chuyển tàu, đổi chuyến
 commute|v|/kəˈmjuːt/|đi lại (nhà – chỗ làm)
 high-speed|adj|/ˌhaɪ ˈspiːd/|tốc độ cao
 costly|adj|/ˈkɔːstli/|đắt đỏ
-punctually|adv|/ˈpʌŋktʃuəli/|đúng giờ`],
-39:["Hotels","Khách sạn",`confirmation|n|/ˌkɑːnfərˈmeɪʃn/|sự xác nhận
+punctual|adj|/ˈpʌŋktʃuəl/|đúng giờ`],
+39:["Hotels","Khách sạn",`hotel|n|/hoʊˈtel/|khách sạn|hotels|T
+confirmation|n|/ˌkɑːnfərˈmeɪʃn/|sự xác nhận
 suite|n|/swiːt/|phòng hạng sang (nhiều gian)
 amenities|n|/əˈmenətiz/|tiện nghi
 rate|n|/reɪt/|giá (phòng)
@@ -622,19 +671,22 @@ check out|v|/tʃek aʊt/|trả phòng
 deluxe|adj|/dɪˈlʌks/|sang trọng, cao cấp
 vacant|adj|/ˈveɪkənt/|còn trống (phòng)
 beforehand|adv|/bɪˈfɔːrhænd/|trước (đó)`],
-40:["Car Rentals","Thuê xe",`rental|n|/ˈrentl/|sự cho thuê, tiền thuê
+40:["Car Rentals","Thuê xe",`car|n|/kɑːr/|xe hơi||T
+rental|n|/ˈrentl/|sự cho thuê; tiền thuê|rentals|T
+mileage|n|/ˈmaɪlɪdʒ/|số dặm đã đi
 damage|n|/ˈdæmɪdʒ/|thiệt hại, hư hỏng
 insurance|n|/ɪnˈʃʊrəns/|bảo hiểm
 license|n|/ˈlaɪsns/|giấy phép (lái xe)
 rent|v|/rent/|thuê (xe)
 return|v|/rɪˈtɜːrn/|trả lại (xe)
 drop off|v|/drɑːp ɔːf/|trả xe (tại địa điểm)
-refuel|v|/ˌriːˈfjuːəl/|đổ thêm nhiên liệu
+navigate|v|/ˈnævɪɡeɪt/|tìm đường, điều hướng
 compact|adj|/ˈkɑːmpækt/|nhỏ gọn
 standard|adj|/ˈstændərd/|tiêu chuẩn
 luxury|adj|/ˈlʌkʃəri/|sang trọng, xa xỉ
-additionally|adv|/əˈdɪʃənəli/|thêm vào đó`],
-41:["Movies","Phim ảnh",`screening|n|/ˈskriːnɪŋ/|buổi chiếu phim
+fuel|n|/ˈfjuːəl/|nhiên liệu`],
+41:["Movies","Phim ảnh",`movie|n|/ˈmuːvi/|bộ phim|movies|T
+screening|n|/ˈskriːnɪŋ/|buổi chiếu phim
 genre|n|/ˈʒɑːnrə/|thể loại
 ticket|n|/ˈtɪkɪt/|vé
 plot|n|/plɑːt/|cốt truyện
@@ -645,20 +697,22 @@ review|v|/rɪˈvjuː/|đánh giá, phê bình
 entertaining|adj|/ˌentərˈteɪnɪŋ/|mang tính giải trí
 captivating|adj|/ˈkæptɪveɪtɪŋ/|lôi cuốn
 thrilling|adj|/ˈθrɪlɪŋ/|ly kỳ, hồi hộp
-enjoyably|adv|/ɪnˈdʒɔɪəbli/|một cách thú vị`],
-42:["Theater","Sân khấu",`performance|n|/pərˈfɔːrməns/|buổi biểu diễn
+critic|n|/ˈkrɪtɪk/|nhà phê bình`],
+42:["Theater","Sân khấu",`theater|n|/ˈθiːətər/|nhà hát||T
+performance|n|/pərˈfɔːrməns/|buổi biểu diễn
 stage|n|/steɪdʒ/|sân khấu
 script|n|/skrɪpt/|kịch bản
 audience|n|/ˈɔːdiəns/|khán giả
 act|v|/ækt/|diễn xuất
 rehearse|v|/rɪˈhɜːrs/|diễn tập
-perform|v|/pərˈfɔːrm/|biểu diễn
+audition|v|/ɔːˈdɪʃn/|thử vai
 applaud|v|/əˈplɔːd/|vỗ tay tán thưởng
 dramatic|adj|/drəˈmætɪk/|kịch tính; thuộc sân khấu
 engaging|adj|/ɪnˈɡeɪdʒɪŋ/|hấp dẫn, lôi cuốn
 sold-out|adj|/ˌsoʊld ˈaʊt/|bán hết vé
-passionately|adv|/ˈpæʃənətli/|một cách say mê`],
-43:["Music","Âm nhạc",`concert|n|/ˈkɑːnsərt/|buổi hòa nhạc
+intermission|n|/ˌɪntərˈmɪʃn/|giờ giải lao`],
+43:["Music","Âm nhạc",`music|n|/ˈmjuːzɪk/|âm nhạc||T
+concert|n|/ˈkɑːnsərt/|buổi hòa nhạc
 melody|n|/ˈmelədi/|giai điệu
 rhythm|n|/ˈrɪðəm/|nhịp điệu
 instrument|n|/ˈɪnstrəmənt/|nhạc cụ
@@ -668,9 +722,10 @@ record|v|/rɪˈkɔːrd/|thu âm
 tune|v|/tuːn/|lên dây, chỉnh âm
 harmonious|adj|/hɑːrˈmoʊniəs/|hài hòa, êm tai
 lively|adj|/ˈlaɪvli/|sôi động
-melodic|adj|/məˈlɑːdɪk/|du dương
-musically|adv|/ˈmjuːzɪkli/|về mặt âm nhạc`],
-44:["Museums","Bảo tàng",`exhibit|n|/ɪɡˈzɪbɪt/|vật trưng bày
+acoustic|adj|/əˈkuːstɪk/|mộc, không dùng điện (nhạc)
+band|n|/bænd/|ban nhạc`],
+44:["Museums","Bảo tàng",`museum|n|/mjuˈziːəm/|bảo tàng|museums|T
+exhibit|n|/ɪɡˈzɪbɪt/|vật trưng bày
 collection|n|/kəˈlekʃn/|bộ sưu tập
 artifact|n|/ˈɑːrtɪfækt/|hiện vật
 curator|n|/kjʊˈreɪtər/|người phụ trách bảo tàng
@@ -681,34 +736,39 @@ admire|v|/ədˈmaɪər/|chiêm ngưỡng
 educational|adj|/ˌedʒuˈkeɪʃənl/|mang tính giáo dục
 interactive|adj|/ˌɪntərˈæktɪv/|tương tác
 historic|adj|/hɪˈstɔːrɪk/|có tính lịch sử
-culturally|adv|/ˈkʌltʃərəli/|về mặt văn hóa`],
-45:["Media","Truyền thông",`journalism|n|/ˈdʒɜːrnəlɪzəm/|nghề báo
+gallery|n|/ˈɡæləri/|phòng trưng bày`],
+45:["Media","Truyền thông",`media|n|/ˈmiːdiə/|phương tiện truyền thông||T
+journalism|n|/ˈdʒɜːrnəlɪzəm/|nghề báo
 broadcast|n|/ˈbrɔːdkæst/|chương trình phát sóng
 press|n|/pres/|báo chí
 publication|n|/ˌpʌblɪˈkeɪʃn/|ấn phẩm; sự xuất bản
 report|v|/rɪˈpɔːrt/|đưa tin
 edit|v|/ˈedɪt/|biên tập
 cover|v|/ˈkʌvər/|đưa tin (về sự kiện)
-publish|v|/ˈpʌblɪʃ/|xuất bản
+subscribe|v|/səbˈskraɪb/|đăng ký theo dõi, đặt mua
 in-depth|adj|/ˌɪn ˈdepθ/|chuyên sâu
 informative|adj|/ɪnˈfɔːrmətɪv/|nhiều thông tin hữu ích
 unbiased|adj|/ʌnˈbaɪəst/|khách quan, không thiên vị
-widely|adv|/ˈwaɪdli/|rộng rãi`],
-46:["Doctor's Office","Phòng khám",`appointment|n|/əˈpɔɪntmənt/|cuộc hẹn
+headline|n|/ˈhedlaɪn/|tiêu đề tin`],
+46:["Doctor's Office","Phòng khám",`doctor|n|/ˈdɑːktər/|bác sĩ|doctor's|T
+office|n|/ˈɔːfɪs/|phòng (khám), văn phòng||T
+appointment|n|/əˈpɔɪntmənt/|cuộc hẹn
 examination|n|/ɪɡˌzæmɪˈneɪʃn/|sự khám bệnh
 symptom|n|/ˈsɪmptəm/|triệu chứng
 diagnosis|n|/ˌdaɪəɡˈnoʊsɪs/|chẩn đoán
 consult|v|/kənˈsʌlt/|hỏi ý kiến (bác sĩ)
 treat|v|/triːt/|điều trị
-examine|v|/ɪɡˈzæmɪn/|khám, kiểm tra
+recover|v|/rɪˈkʌvər/|hồi phục
 prescribe|v|/prɪˈskraɪb/|kê đơn
-thorough|adj|/ˈθɜːroʊ/|kỹ lưỡng
+physician|n|/fɪˈzɪʃn/|bác sĩ
 attentive|adj|/əˈtentɪv/|chu đáo, chú ý
-infected|adj|/ɪnˈfektɪd/|bị nhiễm trùng
-annual|adj|/ˈænjuəl/|hằng năm (khám định kỳ)`],
-47:["Dentist's Office","Nha khoa",`cavity|n|/ˈkævəti/|lỗ sâu răng
+contagious|adj|/kənˈteɪdʒəs/|dễ lây
+chronic|adj|/ˈkrɑːnɪk/|mãn tính`],
+47:["Dentist's Office","Nha khoa",`dentist|n|/ˈdentɪst/|nha sĩ|dentist's|T
+office|n|/ˈɔːfɪs/|phòng (khám), văn phòng||T
+cavity|n|/ˈkævəti/|lỗ sâu răng
 cleaning|n|/ˈkliːnɪŋ/|sự làm sạch (cạo vôi răng)
-extraction|n|/ɪkˈstrækʃn/|sự nhổ răng
+toothache|n|/ˈtuːθeɪk/|đau răng
 checkup|n|/ˈtʃekʌp/|buổi khám định kỳ
 fill|v|/fɪl/|trám (răng)
 extract|v|/ɪkˈstrækt/|nhổ (răng)
@@ -717,8 +777,10 @@ implant|v|/ɪmˈplænt/|cấy ghép
 dental|adj|/ˈdentl/|thuộc về răng
 painful|adj|/ˈpeɪnfl/|đau
 sensitive|adj|/ˈsensətɪv/|nhạy cảm, ê buốt
-gently|adv|/ˈdʒentli/|nhẹ nhàng`],
-48:["Health Insurance","Bảo hiểm y tế",`policy|n|/ˈpɑːləsi/|hợp đồng bảo hiểm
+gentle|adj|/ˈdʒentl/|nhẹ nhàng`],
+48:["Health Insurance","Bảo hiểm y tế",`health|n|/helθ/|sức khỏe||T
+insurance|n|/ɪnˈʃʊrəns/|bảo hiểm||T
+policy|n|/ˈpɑːləsi/|hợp đồng bảo hiểm
 coverage|n|/ˈkʌvərɪdʒ/|phạm vi bảo hiểm
 premium|n|/ˈpriːmiəm/|phí bảo hiểm
 claim|n|/kleɪm/|yêu cầu bồi thường
@@ -729,10 +791,11 @@ enroll|v|/ɪnˈroʊl/|đăng ký tham gia
 comprehensive|adj|/ˌkɑːmprɪˈhensɪv/|toàn diện
 eligible|adj|/ˈelɪdʒəbl/|đủ điều kiện
 allowable|adj|/əˈlaʊəbl/|được phép (theo quy định)
-fully|adv|/ˈfʊli/|đầy đủ, toàn bộ`],
-49:["Hospitals","Bệnh viện",`emergency|n|/ɪˈmɜːrdʒənsi/|cấp cứu, tình trạng khẩn cấp
+beneficiary|n|/ˌbenɪˈfɪʃieri/|người thụ hưởng`],
+49:["Hospitals","Bệnh viện",`hospital|n|/ˈhɑːspɪtl/|bệnh viện|hospitals|T
+emergency|n|/ɪˈmɜːrdʒənsi/|cấp cứu, tình trạng khẩn cấp
 ward|n|/wɔːrd/|khu (phòng) bệnh
-admission|n|/ədˈmɪʃn/|sự nhập viện
+surgery|n|/ˈsɜːrdʒəri/|phẫu thuật
 treatment|n|/ˈtriːtmənt/|sự điều trị
 admit|v|/ədˈmɪt/|cho nhập viện
 discharge|v|/dɪsˈtʃɑːrdʒ/|cho xuất viện
@@ -741,8 +804,9 @@ immunize|v|/ˈɪmjunaɪz/|tiêm chủng, miễn dịch
 allergic|adj|/əˈlɜːrdʒɪk/|dị ứng
 abnormal|adj|/æbˈnɔːrml/|bất thường
 clinical|adj|/ˈklɪnɪkl/|lâm sàng
-specialized|adj|/ˈspeʃəlaɪzd/|chuyên khoa`],
-50:["Pharmacy","Nhà thuốc",`prescription|n|/prɪˈskrɪpʃn/|đơn thuốc
+specialist|n|/ˈspeʃəlɪst/|bác sĩ chuyên khoa`],
+50:["Pharmacy","Nhà thuốc",`pharmacy|n|/ˈfɑːrməsi/|nhà thuốc||T
+prescription|n|/prɪˈskrɪpʃn/|đơn thuốc
 medication|n|/ˌmedɪˈkeɪʃn/|thuốc
 pharmacist|n|/ˈfɑːrməsɪst/|dược sĩ
 dosage|n|/ˈdoʊsɪdʒ/|liều lượng
@@ -753,29 +817,307 @@ discontinue|v|/ˌdɪskənˈtɪnjuː/|ngưng (dùng)
 over-the-counter|adj|/ˌoʊvər ðə ˈkaʊntər/|không cần kê đơn
 essential|adj|/ɪˈsenʃl/|thiết yếu
 accurate|adj|/ˈækjərət/|chính xác (liều, đơn thuốc)
-safely|adv|/ˈseɪfli/|một cách an toàn`]
+side effect|n|/ˈsaɪd ɪfekt/|tác dụng phụ`],
+51:["Manufacturing","Sản xuất",`manufacture|v|/ˌmænjuˈfæktʃər/|sản xuất (quy mô lớn)|manufacturing|T
+factory|n|/ˈfæktri/|nhà máy
+assembly line|n|/əˈsembli laɪn/|dây chuyền lắp ráp
+equipment|n|/ɪˈkwɪpmənt/|thiết bị
+output|n|/ˈaʊtpʊt/|sản lượng
+raw material|n|/ˌrɔː məˈtɪriəl/|nguyên liệu thô
+capacity|n|/kəˈpæsəti/|công suất
+labor|n|/ˈleɪbər/|nhân công, lao động
+assemble|v|/əˈsembl/|lắp ráp
+produce|v|/prəˈduːs/|sản xuất, tạo ra
+streamline|v|/ˈstriːmlaɪn/|tinh gọn (quy trình)
+industrial|adj|/ɪnˈdʌstriəl/|thuộc công nghiệp`],
+52:["Construction","Xây dựng",`construction|n|/kənˈstrʌkʃn/|sự xây dựng, ngành xây dựng||T
+construction site|n|/kənˈstrʌkʃn saɪt/|công trường
+contractor|n|/ˈkɑːntræktər/|nhà thầu
+blueprint|n|/ˈbluːprɪnt/|bản thiết kế
+permit|n|/ˈpɜːrmɪt/|giấy phép
+scaffolding|n|/ˈskæfəldɪŋ/|giàn giáo
+ladder|n|/ˈlædər/|cái thang
+build|v|/bɪld/|xây
+expand|v|/ɪkˈspænd/|mở rộng
+demolish|v|/dɪˈmɑːlɪʃ/|phá dỡ
+pave|v|/peɪv/|lát (đường)
+complete|v|/kəmˈpliːt/|hoàn thành
+structural|adj|/ˈstrʌktʃərəl/|thuộc kết cấu`],
+53:["Maintenance and Repairs","Bảo trì & sửa chữa",`repair|n, v|/rɪˈper/|sự sửa chữa (n); sửa chữa (v)|repairs|T
+maintenance|n|/ˈmeɪntənəns/|sự bảo trì||T
+technician|n|/tekˈnɪʃn/|kỹ thuật viên
+leak|n|/liːk/|chỗ rò rỉ
+tool|n|/tuːl/|dụng cụ
+fix|v|/fɪks/|sửa
+adjust|v|/əˈdʒʌst/|điều chỉnh
+inspect|v|/ɪnˈspekt/|kiểm tra kỹ
+unplug|v|/ˌʌnˈplʌɡ/|rút phích cắm
+broken|adj|/ˈbroʊkən/|bị hỏng
+out of order|adj|/ˌaʊt əv ˈɔːrdər/|hỏng, không hoạt động
+routine|adj|/ruːˈtiːn/|định kỳ, thường lệ
+faulty|adj|/ˈfɔːlti/|bị lỗi, trục trặc`],
+54:["Workplace Safety","An toàn lao động",`workplace|n|/ˈwɜːrkpleɪs/|nơi làm việc||T
+safety|n|/ˈseɪfti/|sự an toàn||T
+hazard|n|/ˈhæzərd/|mối nguy hiểm
+regulation|n|/ˌreɡjuˈleɪʃn/|quy định
+protective gear|n|/prəˈtektɪv ɡɪr/|đồ bảo hộ
+precaution|n|/prɪˈkɔːʃn/|biện pháp phòng ngừa
+injury|n|/ˈɪndʒəri/|chấn thương
+evacuate|v|/ɪˈvækjueɪt/|sơ tán
+prevent|v|/prɪˈvent/|ngăn ngừa
+wear|v|/wer/|mặc, đeo
+obey|v|/əˈbeɪ/|tuân theo
+mandatory|adj|/ˈmændətɔːri/|bắt buộc
+flammable|adj|/ˈflæməbl/|dễ cháy
+slippery|adj|/ˈslɪpəri/|trơn trượt`],
+55:["Energy and Environment","Năng lượng & môi trường",`energy|n|/ˈenərdʒi/|năng lượng||T
+environment|n|/ɪnˈvaɪrənmənt/|môi trường||T
+emission|n|/iˈmɪʃn/|khí thải
+waste|n|/weɪst/|rác thải; sự lãng phí
+consumption|n|/kənˈsʌmpʃn/|sự tiêu thụ
+climate|n|/ˈklaɪmət/|khí hậu
+recycle|v|/ˌriːˈsaɪkl/|tái chế
+conserve|v|/kənˈsɜːrv/|tiết kiệm, bảo tồn
+reduce|v|/rɪˈduːs/|giảm
+pollute|v|/pəˈluːt/|gây ô nhiễm
+renewable|adj|/rɪˈnuːəbl/|tái tạo được
+sustainable|adj|/səˈsteɪnəbl/|bền vững
+eco-friendly|adj|/ˌiːkoʊ ˈfrendli/|thân thiện với môi trường
+solar|adj|/ˈsoʊlər/|thuộc mặt trời`],
+56:["Customer Service","Chăm sóc khách hàng",`customer|n|/ˈkʌstəmər/|khách hàng||T
+service|n|/ˈsɜːrvɪs/|dịch vụ||T
+complaint|n|/kəmˈpleɪnt/|lời phàn nàn
+inquiry|n|/ˈɪŋkwəri/|câu hỏi, yêu cầu thông tin
+feedback|n|/ˈfiːdbæk/|ý kiến phản hồi
+representative|n|/ˌreprɪˈzentətɪv/|nhân viên đại diện
+satisfaction|n|/ˌsætɪsˈfækʃn/|sự hài lòng
+assist|v|/əˈsɪst/|hỗ trợ
+apologize|v|/əˈpɑːlədʒaɪz/|xin lỗi
+handle|v|/ˈhændl/|xử lý
+exchange|v|/ɪksˈtʃeɪndʒ/|đổi (hàng)
+patient|adj|/ˈpeɪʃnt/|kiên nhẫn
+helpful|adj|/ˈhelpfl/|hữu ích, nhiệt tình
+loyal|adj|/ˈlɔɪəl/|trung thành`],
+57:["Telephone and Messages","Điện thoại & tin nhắn",`telephone|n|/ˈtelɪfoʊn/|điện thoại||T
+message|n|/ˈmesɪdʒ/|tin nhắn, lời nhắn|messages|T
+extension|n|/ɪkˈstenʃn/|số máy lẻ
+voicemail|n|/ˈvɔɪsmeɪl/|hộp thư thoại
+receptionist|n|/rɪˈsepʃənɪst/|lễ tân
+line|n|/laɪn/|đường dây
+conference call|n|/ˈkɑːnfərəns kɔːl/|cuộc gọi hội nghị
+call back|v|/kɔːl bæk/|gọi lại
+hang up|v|/hæŋ ʌp/|cúp máy
+put through|v|/pʊt θruː/|nối máy
+dial|v|/ˈdaɪəl/|quay số
+forward|v|/ˈfɔːrwərd/|chuyển tiếp
+unavailable|adj|/ˌʌnəˈveɪləbl/|không liên lạc được, không rảnh
+busy|adj|/ˈbɪzi/|bận (máy bận)`],
+58:["Meetings and Presentations","Họp & thuyết trình",`meeting|n|/ˈmiːtɪŋ/|cuộc họp|meetings|T
+presentation|n|/ˌpriːzenˈteɪʃn/|bài thuyết trình|presentations|T
+slide|n|/slaɪd/|trang chiếu
+handout|n|/ˈhændaʊt/|tài liệu phát tay
+projector|n|/prəˈdʒektər/|máy chiếu
+summarize|v|/ˈsʌməraɪz/|tóm tắt
+postpone|v|/poʊˈspoʊn/|hoãn lại
+reschedule|v|/ˌriːˈskedʒuːl/|dời lịch
+outline|v|/ˈaʊtlaɪn/|trình bày sơ lược
+propose|v|/prəˈpoʊz/|đề xuất
+concise|adj|/kənˈsaɪs/|súc tích
+upcoming|adj|/ˈʌpkʌmɪŋ/|sắp tới
+visual|adj|/ˈvɪʒuəl/|trực quan`],
+59:["Negotiations","Đàm phán",`negotiate|v|/nɪˈɡoʊʃieɪt/|đàm phán|negotiations|T
+deal|n|/diːl/|thỏa thuận, giao dịch
+term|n|/tɜːrm/|điều khoản
+proposal|n|/prəˈpoʊzl/|bản đề xuất
+compromise|n|/ˈkɑːmprəmaɪz/|sự thỏa hiệp
+counteroffer|n|/ˈkaʊntərɔːfər/|đề nghị ngược lại
+persuade|v|/pərˈsweɪd/|thuyết phục
+accept|v|/əkˈsept/|chấp nhận
+reject|v|/rɪˈdʒekt/|từ chối, bác bỏ
+finalize|v|/ˈfaɪnəlaɪz/|hoàn tất, chốt
+mutual|adj|/ˈmjuːtʃuəl/|chung, đôi bên
+flexible|adj|/ˈfleksəbl/|linh hoạt
+firm|adj|/fɜːrm/|chắc chắn, kiên quyết`],
+60:["Teamwork and Management","Làm việc nhóm & quản lý",`teamwork|n|/ˈtiːmwɜːrk/|tinh thần làm việc nhóm||T
+management|n|/ˈmænɪdʒmənt/|sự quản lý; ban quản lý||T
+supervisor|n|/ˈsuːpərvaɪzər/|người giám sát
+colleague|n|/ˈkɑːliːɡ/|đồng nghiệp
+task|n|/tæsk/|nhiệm vụ
+responsibility|n|/rɪˌspɑːnsəˈbɪləti/|trách nhiệm
+workload|n|/ˈwɜːrkloʊd/|khối lượng công việc
+delegate|v|/ˈdelɪɡeɪt/|giao việc, ủy quyền
+collaborate|v|/kəˈlæbəreɪt/|hợp tác
+oversee|v|/ˌoʊvərˈsiː/|giám sát
+motivate|v|/ˈmoʊtɪveɪt/|tạo động lực
+coordinate|v|/koʊˈɔːrdɪneɪt/|điều phối
+capable|adj|/ˈkeɪpəbl/|có năng lực
+cooperative|adj|/koʊˈɑːpərətɪv/|hợp tác, sẵn lòng giúp đỡ`],
+61:["Sales","Bán hàng",`sales|n|/seɪlz/|doanh số; việc bán hàng||T
+quota|n|/ˈkwoʊtə/|chỉ tiêu
+commission|n|/kəˈmɪʃn/|tiền hoa hồng
+client|n|/ˈklaɪənt/|khách hàng
+target|n|/ˈtɑːrɡɪt/|mục tiêu
+figure|n|/ˈfɪɡjər/|số liệu
+exceed|v|/ɪkˈsiːd/|vượt quá
+decline|v|/dɪˈklaɪn/|giảm, sụt
+boost|v|/buːst/|thúc đẩy, tăng
+demonstrate|v|/ˈdemənstreɪt/|trình diễn (sản phẩm)
+potential|adj|/pəˈtenʃl/|tiềm năng
+steady|adj|/ˈstedi/|đều đặn, ổn định
+lucrative|adj|/ˈluːkrətɪv/|sinh lời cao`],
+62:["Online Shopping","Mua sắm trực tuyến",`online|adj|/ˌɑːnˈlaɪn/|trực tuyến||T
+shop|v|/ʃɑːp/|mua sắm|shopping|T
+website|n|/ˈwebsaɪt/|trang web
+cart|n|/kɑːrt/|giỏ hàng
+promo code|n|/ˈproʊmoʊ koʊd/|mã khuyến mãi
+review|n|/rɪˈvjuː/|bài đánh giá (sản phẩm)
+password|n|/ˈpæswɜːrd/|mật khẩu
+log in|v|/lɔːɡ ɪn/|đăng nhập
+cancel|v|/ˈkænsl/|hủy
+process|v|/ˈprɑːses/|xử lý (đơn hàng)
+customize|v|/ˈkʌstəmaɪz/|tùy chỉnh
+estimated|adj|/ˈestɪmeɪtɪd/|dự kiến, ước tính
+exclusive|adj|/ɪkˈskluːsɪv/|độc quyền, dành riêng
+limited|adj|/ˈlɪmɪtɪd/|có hạn`],
+63:["Technology and Internet","Công nghệ & Internet",`technology|n|/tekˈnɑːlədʒi/|công nghệ||T
+internet|n|/ˈɪntərnet/|mạng Internet||T
+database|n|/ˈdeɪtəbeɪs/|cơ sở dữ liệu
+browser|n|/ˈbraʊzər/|trình duyệt
+app|n|/æp/|ứng dụng
+storage|n|/ˈstɔːrɪdʒ/|bộ nhớ lưu trữ
+bandwidth|n|/ˈbændwɪdθ/|băng thông
+download|v|/ˌdaʊnˈloʊd/|tải xuống
+back up|v|/bæk ʌp/|sao lưu
+connect|v|/kəˈnekt/|kết nối
+troubleshoot|v|/ˈtrʌblʃuːt/|xử lý sự cố
+encrypt|v|/ɪnˈkrɪpt/|mã hóa
+outdated|adj|/ˌaʊtˈdeɪtɪd/|lỗi thời
+cloud-based|adj|/ˈklaʊd beɪst/|dựa trên điện toán đám mây`],
+64:["Company News","Tin tức doanh nghiệp",`company|n|/ˈkʌmpəni/|công ty||T
+news|n|/nuːz/|tin tức||T
+merger|n|/ˈmɜːrdʒər/|sự sáp nhập
+acquisition|n|/ˌækwɪˈzɪʃn/|sự mua lại, thâu tóm
+shareholder|n|/ˈʃerhoʊldər/|cổ đông
+subsidiary|n|/səbˈsɪdieri/|công ty con
+branch|n|/bræntʃ/|chi nhánh
+founder|n|/ˈfaʊndər/|nhà sáng lập
+announce|v|/əˈnaʊns/|thông báo
+appoint|v|/əˈpɔɪnt/|bổ nhiệm
+restructure|v|/ˌriːˈstrʌktʃər/|tái cấu trúc
+step down|v|/step daʊn/|từ chức
+overseas|adj|/ˌoʊvərˈsiːz/|ở nước ngoài
+leading|adj|/ˈliːdɪŋ/|hàng đầu`],
+65:["Public Relations","Quan hệ công chúng",`public|adj|/ˈpʌblɪk/|công chúng; công khai||T
+relations|n|/rɪˈleɪʃnz/|các mối quan hệ||T
+press release|n|/ˈpres rɪliːs/|thông cáo báo chí
+spokesperson|n|/ˈspoʊkspɜːrsn/|người phát ngôn
+brand|n|/brænd/|thương hiệu
+reputation|n|/ˌrepjuˈteɪʃn/|danh tiếng
+publicity|n|/pʌbˈlɪsəti/|sự chú ý của công chúng
+slogan|n|/ˈsloʊɡən/|khẩu hiệu
+endorse|v|/ɪnˈdɔːrs/|ủng hộ, quảng bá cho
+highlight|v|/ˈhaɪlaɪt/|làm nổi bật
+respond|v|/rɪˈspɑːnd/|phản hồi
+appeal|v|/əˈpiːl/|thu hút (+ to)
+positive|adj|/ˈpɑːzətɪv/|tích cực
+favorable|adj|/ˈfeɪvərəbl/|thuận lợi, có thiện cảm`],
+66:["Commuting and Traffic","Đi lại & giao thông",`commute|v|/kəˈmjuːt/|đi lại (giữa nhà và chỗ làm)|commuting|T
+traffic|n|/ˈtræfɪk/|giao thông, xe cộ||T
+traffic jam|n|/ˈtræfɪk dʒæm/|tắc đường
+intersection|n|/ˌɪntərˈsekʃn/|ngã tư
+detour|n|/ˈdiːtʊr/|đường vòng
+parking lot|n|/ˈpɑːrkɪŋ lɑːt/|bãi đỗ xe
+pedestrian|n|/pəˈdestriən/|người đi bộ
+rush hour|n|/ˈrʌʃ aʊər/|giờ cao điểm
+shuttle|n|/ˈʃʌtl/|xe đưa đón
+carpool|v|/ˈkɑːrpuːl/|đi chung xe
+cross|v|/krɔːs/|băng qua
+pull over|v|/pʊl ˈoʊvər/|tấp vào lề
+block|v|/blɑːk/|chặn (đường)
+congested|adj|/kənˈdʒestɪd/|ùn tắc`],
+67:["Housing","Nhà ở",`housing|n|/ˈhaʊzɪŋ/|nhà ở||T
+realtor|n|/ˈriːəltər/|người môi giới nhà đất
+mortgage|n|/ˈmɔːrɡɪdʒ/|khoản vay mua nhà
+neighborhood|n|/ˈneɪbərhʊd/|khu dân cư
+apartment|n|/əˈpɑːrtmənt/|căn hộ
+listing|n|/ˈlɪstɪŋ/|tin rao (nhà)
+move|v|/muːv/|chuyển nhà
+decorate|v|/ˈdekəreɪt/|trang trí
+remodel|v|/ˌriːˈmɑːdl/|sửa sang lại
+afford|v|/əˈfɔːrd/|đủ khả năng chi trả
+cozy|adj|/ˈkoʊzi/|ấm cúng
+suburban|adj|/səˈbɜːrbən/|thuộc ngoại ô
+prime|adj|/praɪm/|đắc địa, hàng đầu`],
+68:["Community and City Services","Cộng đồng & dịch vụ đô thị",`community|n|/kəˈmjuːnəti/|cộng đồng||T
+city|n|/ˈsɪti/|thành phố||T
+service|n|/ˈsɜːrvɪs/|dịch vụ|services|T
+resident|n|/ˈrezɪdənt/|cư dân
+council|n|/ˈkaʊnsl/|hội đồng (thành phố)
+volunteer|n|/ˌvɑːlənˈtɪr/|tình nguyện viên
+fundraiser|n|/ˈfʌndreɪzər/|sự kiện gây quỹ
+donation|n|/doʊˈneɪʃn/|khoản quyên góp
+library|n|/ˈlaɪbreri/|thư viện
+petition|v|/pəˈtɪʃn/|kiến nghị
+notify|v|/ˈnoʊtɪfaɪ/|thông báo
+improve|v|/ɪmˈpruːv/|cải thiện
+nonprofit|adj|/ˌnɑːnˈprɑːfɪt/|phi lợi nhuận
+municipal|adj|/mjuːˈnɪsɪpl/|thuộc thành phố
+nearby|adj|/ˌnɪrˈbaɪ/|gần đó`],
+69:["Fitness and Wellness","Thể dục & sức khỏe",`fitness|n|/ˈfɪtnəs/|sự khỏe mạnh, thể lực||T
+wellness|n|/ˈwelnəs/|sức khỏe toàn diện||T
+gym|n|/dʒɪm/|phòng tập
+membership|n|/ˈmembərʃɪp/|tư cách hội viên
+instructor|n|/ɪnˈstrʌktər/|huấn luyện viên, người hướng dẫn
+nutrition|n|/nuˈtrɪʃn/|dinh dưỡng
+diet|n|/ˈdaɪət/|chế độ ăn
+exercise|v|/ˈeksərsaɪz/|tập thể dục
+stretch|v|/stretʃ/|giãn cơ
+relax|v|/rɪˈlæks/|thư giãn
+sign up|v|/saɪn ʌp/|đăng ký
+healthy|adj|/ˈhelθi/|khỏe mạnh
+intense|adj|/ɪnˈtens/|cường độ cao
+balanced|adj|/ˈbælənst/|cân bằng`],
+70:["Education and Courses","Học tập & khóa học",`education|n|/ˌedʒuˈkeɪʃn/|giáo dục||T
+course|n|/kɔːrs/|khóa học|courses|T
+seminar|n|/ˈsemɪnɑːr/|hội thảo chuyên đề
+certificate|n|/sərˈtɪfɪkət/|chứng chỉ
+tuition|n|/tuˈɪʃn/|học phí
+lecture|n|/ˈlektʃər/|bài giảng
+enroll|v|/ɪnˈroʊl/|ghi danh
+master|v|/ˈmæstər/|thành thạo
+graduate|v|/ˈɡrædʒueɪt/|tốt nghiệp
+assign|v|/əˈsaɪn/|giao (bài tập, nhiệm vụ)
+introductory|adj|/ˌɪntrəˈdʌktəri/|nhập môn
+intensive|adj|/ɪnˈtensɪv/|cấp tốc, chuyên sâu
+academic|adj|/ˌækəˈdemɪk/|học thuật`]
 };
-const CATS=[["Kinh doanh chung",1,5],["Văn phòng",6,10],["Nhân sự",11,15],["Mua hàng",16,20],["Tài chính & ngân sách",21,25],["Quản lý",26,30],["Nhà hàng & sự kiện",31,35],["Du lịch",36,40],["Giải trí",41,45],["Sức khỏe",46,50]];
-const POS={n:"danh từ",v:"động từ",adj:"tính từ",adv:"trạng từ"};
+const MIG={"1-0":"1-agreement","1-1":"1-party","1-2":"1-provision","1-3":"1-clause","1-5":"1-obligate","1-6":"1-sign","1-7":"1-resolve","1-8":"1-binding","1-9":"1-contractual","1-10":"1-legal","2-0":"2-market","2-1":"2-competition","2-2":"2-strategy","2-3":"2-customer","2-4":"2-advertise","2-5":"2-attract","2-6":"2-consume","2-7":"2-market","2-8":"2-effective","2-9":"2-productive","2-10":"2-persuasive","3-0":"3-warranty","3-1":"3-defect","3-2":"3-claim","3-3":"3-coverage","3-4":"3-guarantee","3-5":"3-replace","3-6":"3-refund","3-7":"3-repair","3-9":"3-valid","3-10":"3-expired","4-0":"4-goal","4-1":"4-strategy","4-2":"4-forecast","4-3":"4-resource","4-4":"4-forecast","4-5":"4-plan","4-6":"4-analyze","4-7":"4-assess","4-9":"4-realistic","4-10":"4-achievable","5-0":"5-attendee","5-1":"5-schedule","5-2":"5-location","5-3":"5-venue","5-4":"5-arrange","5-5":"5-hold","5-6":"5-participate","5-7":"5-register","5-8":"5-convenient","5-11":"5-international","6-0":"6-network","6-1":"6-software","6-2":"6-hardware","6-3":"6-virus","6-4":"6-access","6-5":"6-install","6-6":"6-upgrade","6-7":"6-delete","6-8":"6-digital","6-9":"6-compatible","6-10":"6-secure","7-0":"7-printer","7-1":"7-scanner","7-2":"7-photocopier","7-3":"7-fax","7-4":"7-operate","7-8":"7-functional","7-9":"7-advanced","8-0":"8-procedure","8-1":"8-policy","8-2":"8-document","8-3":"8-file","8-4":"8-follow","8-5":"8-file","8-6":"8-organize","8-7":"8-implement","8-8":"8-systematic","8-9":"8-efficient","8-10":"8-official","9-0":"9-device","9-1":"9-component","9-2":"9-circuit","9-3":"9-voltage","9-4":"9-transmit","9-5":"9-convert","9-6":"9-install","9-7":"9-operate","9-8":"9-electronic","9-9":"9-wireless","9-10":"9-automated","9-11":"9-sophisticated","10-0":"10-letter","10-1":"10-email","10-2":"10-memo","10-4":"10-compose","10-5":"10-send","10-6":"10-receive","10-7":"10-reply","10-8":"10-formal","10-9":"10-urgent","10-10":"10-brief","11-0":"11-candidate","11-1":"11-resume","11-2":"11-vacancy","11-3":"11-qualification","11-4":"11-recruit","11-5":"11-advertise","11-6":"11-apply","11-7":"11-shortlist","11-8":"11-suitable","11-9":"11-experienced","11-10":"11-competitive","12-0":"12-application","12-1":"12-interview","12-2":"12-reference","12-3":"12-portfolio","12-4":"12-submit","12-5":"12-interview","12-6":"12-evaluate","12-7":"12-prepare","12-8":"12-confident","12-9":"12-professional","12-10":"12-qualified","13-0":"13-hire","13-1":"13-orientation","13-2":"13-training","13-3":"13-probation","13-4":"13-hire","13-6":"13-coach","13-7":"13-mentor","13-8":"13-skilled","13-9":"13-inexperienced","13-10":"13-knowledgeable","14-0":"14-salary","14-1":"14-benefit","14-2":"14-compensation","14-3":"14-deduction","14-4":"14-earn","14-5":"14-negotiate","14-6":"14-contribute","14-7":"14-increase","14-8":"14-generous","14-9":"14-attractive","14-10":"14-additional","15-0":"15-promotion","15-1":"15-pension","15-2":"15-award","15-3":"15-recognition","15-5":"15-award","15-6":"15-retire","15-7":"15-achieve","15-8":"15-deserving","15-9":"15-eligible","15-10":"15-outstanding","16-0":"16-product","16-1":"16-price","16-2":"16-discount","16-3":"16-receipt","16-4":"16-purchase","16-5":"16-browse","16-6":"16-bargain","16-7":"16-return","16-8":"16-affordable","16-9":"16-available","16-10":"16-reasonable","17-0":"17-supplier","17-2":"17-order","17-3":"17-shipment","17-4":"17-order","17-5":"17-deliver","17-6":"17-restock","17-7":"17-fulfill","17-8":"17-sufficient","17-9":"17-backordered","17-10":"17-bulk","18-0":"18-cargo","18-1":"18-freight","18-2":"18-warehouse","18-3":"18-carrier","18-4":"18-ship","18-5":"18-track","18-6":"18-package","18-7":"18-dispatch","18-8":"18-domestic","18-9":"18-express","18-10":"18-fragile","19-0":"19-invoice","19-1":"19-bill","19-2":"19-payment","19-3":"19-due date","19-4":"19-issue","19-5":"19-charge","19-7":"19-settle","19-8":"19-outstanding","19-9":"19-overdue","19-10":"19-accurate","19-11":"19-certified","20-0":"20-inventory","20-1":"20-stock","20-2":"20-supply","20-3":"20-shortage","20-4":"20-count","20-5":"20-check","20-6":"20-update","20-7":"20-dispose","20-8":"20-remain","20-9":"20-out-of-stock","21-0":"21-account","21-1":"21-deposit","21-2":"21-balance","21-3":"21-transaction","21-4":"21-withdraw","21-5":"21-deposit","21-6":"21-transfer","21-7":"21-lend","21-8":"21-borrow","21-9":"21-financial","21-10":"21-online","22-0":"22-ledger","22-1":"22-budget","22-2":"22-expense","22-3":"22-audit","22-4":"22-audit","22-5":"22-calculate","22-6":"22-record","22-7":"22-reconcile","22-8":"22-consistent","22-9":"22-fiscal","22-10":"22-precise","23-0":"23-asset","23-1":"23-portfolio","23-2":"23-bond","23-3":"23-stock","23-4":"23-invest","23-5":"23-diversify","23-6":"23-risk","23-7":"23-allocate","23-8":"23-profitable","23-9":"23-speculative","23-10":"23-long-term","24-0":"24-tax","24-1":"24-deduction","24-2":"24-refund","24-3":"24-liability","24-4":"24-file","24-6":"24-withhold","24-7":"24-owe","24-10":"24-exempt","25-0":"25-statement","25-1":"25-balance sheet","25-2":"25-income statement","25-3":"25-revenue","25-4":"25-report","25-5":"25-analyze","25-6":"25-compile","25-7":"25-project","25-8":"25-detailed","25-9":"25-quarterly","25-10":"25-net","26-0":"26-property","26-1":"26-department","26-2":"26-facility","26-3":"26-headquarters","26-4":"26-manage","26-5":"26-occupy","26-6":"26-renovate","26-7":"26-relocate","26-8":"26-commercial","26-9":"26-residential","26-10":"26-spacious","27-0":"27-agenda","27-1":"27-minutes","27-2":"27-committee","27-3":"27-quorum","27-4":"27-convene","27-5":"27-vote","27-6":"27-discuss","27-7":"27-adjourn","27-8":"27-formal","27-9":"27-unanimous","27-10":"27-executive","28-0":"28-quality","28-1":"28-standard","28-2":"28-inspection","28-3":"28-defect","28-5":"28-test","28-6":"28-comply","28-7":"28-correct","28-8":"28-reliable","29-0":"29-prototype","29-1":"29-feature","29-2":"29-innovation","29-3":"29-specification","29-4":"29-develop","29-5":"29-design","29-6":"29-enhance","29-7":"29-launch","29-9":"29-marketable","29-10":"29-competitive","30-0":"30-lease","30-1":"30-tenant","30-2":"30-landlord","30-3":"30-rent","30-4":"30-lease","30-5":"30-rent","30-6":"30-occupy","30-7":"30-terminate","30-8":"30-renew","30-9":"30-vacant","30-10":"30-furnished","31-0":"31-reservation","31-1":"31-cuisine","31-2":"31-ambiance","31-3":"31-service","31-4":"31-recommend","31-5":"31-dine","31-6":"31-book","31-7":"31-request","31-8":"31-delicious","31-9":"31-high-class","31-10":"31-casual","32-0":"32-appetizer","32-1":"32-entrée","32-2":"32-menu","32-3":"32-check","32-4":"32-complain","32-5":"32-serve","32-6":"32-tip","32-7":"32-reserve","32-8":"32-savory","32-9":"32-crowded","32-10":"32-courteous","33-0":"33-delivery","33-1":"33-beverage","33-2":"33-portion","33-3":"33-tray","33-4":"33-pack","33-5":"33-prepare","33-6":"33-pick up","33-7":"33-queue","33-8":"33-separate","33-9":"33-convenient","33-10":"33-quick","34-0":"34-chef","34-1":"34-recipe","34-2":"34-ingredient","34-3":"34-kitchen","34-4":"34-cook","34-5":"34-bake","34-6":"34-specialize","34-7":"34-season","34-8":"34-creative","34-9":"34-skilled","34-10":"34-passionate","35-0":"35-event","35-1":"35-venue","35-4":"35-organize","35-5":"35-schedule","35-6":"35-host","35-7":"35-attend","35-8":"35-successful","35-10":"35-memorable","36-0":"36-itinerary","36-1":"36-passport","36-2":"36-reservation","36-3":"36-fare","36-4":"36-depart","36-5":"36-arrive","36-6":"36-book","36-7":"36-check in","36-8":"36-scenic","36-9":"36-comfortable","36-10":"36-round-trip","36-11":"36-abroad","37-0":"37-flight","37-1":"37-boarding pass","37-2":"37-gate","37-3":"37-baggage","37-4":"37-land","37-5":"37-board","37-6":"37-take off","37-7":"37-delay","37-8":"37-domestic","37-9":"37-complimentary","37-10":"37-on-time","37-11":"37-aboard","38-0":"38-route","38-1":"38-fare","38-2":"38-passenger","38-3":"38-platform","38-4":"38-railway","38-5":"38-station","38-6":"38-transport","38-7":"38-transfer","38-8":"38-commute","38-9":"38-high-speed","38-10":"38-costly","39-0":"39-confirmation","39-1":"39-suite","39-2":"39-amenities","39-3":"39-rate","39-4":"39-accommodation","39-5":"39-upgrade","39-6":"39-modify","39-7":"39-inquire","39-8":"39-check out","39-9":"39-deluxe","39-10":"39-vacant","39-11":"39-beforehand","40-1":"40-damage","40-2":"40-insurance","40-3":"40-license","40-4":"40-rent","40-5":"40-return","40-6":"40-drop off","40-8":"40-compact","40-9":"40-standard","40-10":"40-luxury","41-0":"41-screening","41-1":"41-genre","41-2":"41-ticket","41-3":"41-plot","41-4":"41-direct","41-5":"41-star","41-6":"41-premiere","41-7":"41-review","41-8":"41-entertaining","41-9":"41-captivating","41-10":"41-thrilling","42-0":"42-performance","42-1":"42-stage","42-2":"42-script","42-3":"42-audience","42-4":"42-act","42-5":"42-rehearse","42-7":"42-applaud","42-8":"42-dramatic","42-9":"42-engaging","42-10":"42-sold-out","43-0":"43-concert","43-1":"43-melody","43-2":"43-rhythm","43-3":"43-instrument","43-4":"43-compose","43-5":"43-play","43-6":"43-record","43-7":"43-tune","43-8":"43-harmonious","43-9":"43-lively","44-0":"44-exhibit","44-1":"44-collection","44-2":"44-artifact","44-3":"44-curator","44-4":"44-display","44-5":"44-guide","44-6":"44-present","44-7":"44-admire","44-8":"44-educational","44-9":"44-interactive","44-10":"44-historic","45-0":"45-journalism","45-1":"45-broadcast","45-2":"45-press","45-3":"45-publication","45-4":"45-report","45-5":"45-edit","45-6":"45-cover","45-8":"45-in-depth","45-9":"45-informative","45-10":"45-unbiased","46-0":"46-appointment","46-1":"46-examination","46-2":"46-symptom","46-3":"46-diagnosis","46-4":"46-consult","46-5":"46-treat","46-7":"46-prescribe","46-9":"46-attentive","47-0":"47-cavity","47-1":"47-cleaning","47-3":"47-checkup","47-4":"47-fill","47-5":"47-extract","47-6":"47-floss","47-7":"47-implant","47-8":"47-dental","47-9":"47-painful","47-10":"47-sensitive","48-0":"48-policy","48-1":"48-coverage","48-2":"48-premium","48-3":"48-claim","48-4":"48-deductible","48-5":"48-insure","48-6":"48-reimburse","48-7":"48-enroll","48-8":"48-comprehensive","48-9":"48-eligible","48-10":"48-allowable","49-0":"49-emergency","49-1":"49-ward","49-3":"49-treatment","49-4":"49-admit","49-5":"49-discharge","49-6":"49-diagnose","49-7":"49-immunize","49-8":"49-allergic","49-9":"49-abnormal","49-10":"49-clinical","50-0":"50-prescription","50-1":"50-medication","50-2":"50-pharmacist","50-3":"50-dosage","50-4":"50-dispense","50-5":"50-administer","50-6":"50-refill","50-7":"50-discontinue","50-8":"50-over-the-counter","50-9":"50-essential","50-10":"50-accurate"};
+const CATS=[["Kinh doanh chung",1,5],["Văn phòng",6,10],["Nhân sự",11,15],["Mua hàng",16,20],["Tài chính & ngân sách",21,25],["Quản lý",26,30],["Nhà hàng & sự kiện",31,35],["Du lịch",36,40],["Giải trí",41,45],["Sức khỏe",46,50],["Vận hành & sản xuất",51,55],["Giao tiếp công việc",56,60],["Kinh doanh hiện đại",61,65],["Đời sống & cộng đồng",66,70]];
+const POS_={n:"danh từ",v:"động từ",adj:"tính từ",adv:"trạng từ",phrase:"cụm từ",prep:"giới từ",conj:"liên từ",pron:"đại từ"};const POS=new Proxy(POS_,{get:(o,k)=>String(k).split(", ").map(x=>o[x]||x).join(" / ")});
 const TOPICS={};const ALL=[];
-for(const k in RAW){const [en,vi,txt]=RAW[k];const words=txt.trim().split("\n").map((l,i)=>{const [w,p,ipa,m]=l.split("|");const o={id:k+"-"+i,t:+k,w,p,ipa,m};ALL.push(o);return o});TOPICS[k]={id:+k,en,vi,words}}
+for(const k in RAW){const [en,vi,txt]=RAW[k];const words=txt.trim().split("\n").map((l,i)=>{const [w,p,ipa,m,alt,tt]=l.split("|");const o={id:k+"-"+w,t:+k,w,p,ipa,m,alt:alt?alt.split(",").map(x=>x.trim().toLowerCase()):[],title:tt==="T"};ALL.push(o);return o});TOPICS[k]={id:+k,en,vi,words}}
 const DAY=864e5, INTERVALS=[0,1,3,7,14,30];
 const KEY="toeic600-progress-v1";
-let S={cards:{},dir:"en",autoSpeak:true,streak:{last:"",n:0},updated:0};
-try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+let S={v:2,cards:{},dir:"en",autoSpeak:true,streak:{last:"",n:0},updated:0};
+function migrate(o){if(!o||o.v===2)return o;const c={};for(const [k,v] of Object.entries(o.cards||{})){const nk=MIG[k];if(!nk)continue;const e=c[nk];if(!e||v.b>e.b)c[nk]=v}o.cards=c;o.v=2;return o}
+try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,migrate(JSON.parse(r)))}catch(e){}
+const NT=Object.keys(TOPICS).length;
+function syncCustom(){const cw=(S.custom||[]).map(o=>({id:"100-"+o.w,t:100,w:o.w,p:o.p,ipa:o.ipa,m:o.m}));for(let i=ALL.length-1;i>=0;i--)if(ALL[i].t===100)ALL.splice(i,1);ALL.push(...cw);TOPICS[100]={id:100,en:"My words",vi:"Sổ từ của tôi",words:cw}}
+syncCustom();
+function cats(){return TOPICS[100].words.length?[["Sổ từ của tôi",100,100],...CATS]:CATS}
 let dbRef=null,saveT=null;
 function save(){S.updated=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
   if(dbRef){clearTimeout(saveT);saveT=setTimeout(()=>{dbRef.set(JSON.parse(JSON.stringify(S))).catch(()=>{})},1200)}}
 (async()=>{try{if(!window.claude||!claude.use)return;const [db,user]=await Promise.all([claude.use("db"),claude.use("user")]);if(!db||!user)return;
   const id=await user.id();if(!id)return;const ref=db.collection("data/users/"+id).doc("progress");const snap=await ref.get();dbRef=ref;
-  if(snap.exists){const d=snap.data();if(d&&(d.updated||0)>(S.updated||0)){S=Object.assign(S,d);try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){};render()}}
+  if(snap.exists){const d=migrate(Object.assign({},snap.data()));if(d&&(d.updated||0)>(S.updated||0)){S=Object.assign(S,d);syncCustom();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){};render()}}
   else if(S.updated)save();}catch(e){}})();
 
 const st=id=>S.cards[id];
 const known=id=>{const c=st(id);return c&&c.b>=3};
 const seen=id=>!!st(id);
 function dueList(){const now=Date.now();return ALL.filter(x=>{const c=st(x.id);return c&&c.b<5&&c.d<=now}).concat(ALL.filter(x=>{const c=st(x.id);return c&&c.b>=5&&c.d<=now}))}
-function grade(id,ok){const c=S.cards[id]||{b:0,d:0};if(ok){c.b=Math.min(5,(S.cards[id]?c.b:0)+1)}else c.b=0;c.d=Date.now()+INTERVALS[c.b]*DAY-(c.b?36e5*2:0);S.cards[id]=c;bumpStreak();save()}
+function grade(id,ok){const had=!!S.cards[id];const c=S.cards[id]||{b:0,d:0};if(ok){c.b=Math.min(5,(had?c.b:0)+1)}else{if(had)c.l=(c.l||0)+1;c.b=0}c.d=Date.now()+INTERVALS[c.b]*DAY-(c.b?36e5*2:0);S.cards[id]=c;bumpStreak();save()}
 function today(){const d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
 function bumpStreak(){const t=today();if(S.streak.last===t)return;const y=new Date(Date.now()-DAY);const ys=y.getFullYear()+"-"+(y.getMonth()+1)+"-"+y.getDate();S.streak.n=S.streak.last===ys?S.streak.n+1:1;S.streak.last=t}
 function topicStats(t){const ws=TOPICS[t].words;return{k:ws.filter(w=>known(w.id)).length,s:ws.filter(w=>seen(w.id)).length,n:ws.length}}
@@ -809,20 +1151,21 @@ function renderNav(){const due=dueList().length;const it=[["home","Chủ đề",
 function render(){renderNav();const a=$("#app");({home:Home,topic:Topic,study:Study,spell:Spell,quiz:Quiz,review:Review,search:Search,settings:Settings}[view.name])(a)}
 
 function Home(a){const k=ALL.filter(w=>known(w.id)).length,s=ALL.filter(w=>seen(w.id)).length,due=dueList().length;
- let h=`<h1>Thẻ từ TOEIC 600</h1><p class="sub">50 chủ đề, 600 từ. Học từng chủ đề, ôn lại đúng lúc sắp quên.</p>
- <div class="today"><div class="in"><div class="n">${k}<span style="font-size:20px;color:var(--muted)"> /600</span></div><div class="l">từ đã thuộc · ${s} từ đã gặp${S.streak.n?` · chuỗi ${S.streak.n} ngày`:""}</div><div class="bar"><i style="width:${k/6}%"></i></div></div>
+ let h=`<h1>Thẻ từ TOEIC 600</h1><p class="sub">${NT} chủ đề, ${ALL.length} từ. Học từng chủ đề, ôn lại đúng lúc sắp quên.</p>
+ <div class="today"><div class="in"><div class="n">${k}<span style="font-size:20px;color:var(--muted)"> /${ALL.length}</span></div><div class="l">từ đã thuộc · ${s} từ đã gặp${S.streak.n?` · chuỗi ${S.streak.n} ngày`:""}</div><div class="bar"><i style="width:${k/ALL.length*100}%"></i></div></div>
  <button class="btn" id="goRev" ${due?"":"disabled"}>${due?`Ôn ${due} từ`:"Chưa có từ đến hạn"}</button></div>`;
- for(const [name,from,to] of CATS){h+=`<h2>${name}</h2><div class="cat">`;
-  for(let t=from;t<=to;t++){const T=TOPICS[t],x=topicStats(t);h+=`<button class="topic" data-t="${t}"><span class="num ${x.k===x.n?"done":""}">${t}</span><span class="nm"><b>${esc(T.vi)}</b><span>${esc(T.en)}</span></span><span class="mini"><span class="bar"><i style="width:${x.k/x.n*100}%"></i></span><small>${x.k}/${x.n}</small></span></button>`}
+ for(const [name,from,to] of cats()){h+=`<h2>${name}</h2><div class="cat">`;
+  for(let t=from;t<=to;t++){const T=TOPICS[t],x=topicStats(t);h+=`<button class="topic" data-t="${t}"><span class="num ${x.k===x.n?"done":""}">${t===100?"★":t}</span><span class="nm"><b>${esc(T.vi)}</b><span>${esc(T.en)}</span></span><span class="mini"><span class="bar"><i style="width:${x.k/x.n*100}%"></i></span><small>${x.k}/${x.n}</small></span></button>`}
   h+="</div>"}
  a.innerHTML=h;a.querySelectorAll(".topic").forEach(b=>b.onclick=()=>go({name:"topic",t:+b.dataset.t}));const r=$("#goRev");if(r)r.onclick=()=>startReview()}
 
 function Topic(a){const T=TOPICS[view.t],x=topicStats(view.t);
- a.innerHTML=`<div class="top"><button class="icon" id="bk" aria-label="Quay lại">${I.back}</button><div class="t"><b>${view.t}. ${esc(T.vi)}</b><span>${esc(T.en)} · ${x.k}/${x.n} đã thuộc</span></div></div>
- <div class="actions" style="margin-top:14px"><button class="btn" id="st">${x.s?"Học tiếp":"Bắt đầu học"}</button><button class="btn ghost" id="qz">Trắc nghiệm</button></div><button class="btn ghost" id="sp2" style="width:100%;margin-top:10px">Luyện chính tả</button>
- <h2>Danh sách từ</h2>${T.words.map(w=>row(w)).join("")}`;
+ a.innerHTML=`<div class="top"><button class="icon" id="bk" aria-label="Quay lại">${I.back}</button><div class="t"><b>${view.t===100?"":view.t+". "}${esc(T.vi)}</b><span>${esc(T.en)} · ${x.k}/${x.n} đã thuộc</span></div></div>
+ <div class="actions" style="margin-top:14px"><button class="btn" id="st">${x.s?"Học tiếp":"Bắt đầu học"}</button><button class="btn ghost" id="qz" ${T.words.length<4?"disabled":""}>Trắc nghiệm</button></div><button class="btn ghost" id="sp2" style="width:100%;margin-top:10px">Luyện chính tả</button>
+ <h2>Danh sách từ</h2>${view.t===100?`<p class="sub" style="margin:-4px 0 6px">Các từ bạn đã tra và thêm vào. Học, ôn và luyện chính tả như mọi chủ đề khác.</p>`:""}${T.words.map(w=>row(w)+(view.t===100?`<button class="linkbtn" data-del="${esc(w.w)}" style="margin:2px 0 6px auto">Xóa khỏi sổ</button>`:"")).join("")}`;
+ a.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{const w=b.dataset.del;S.custom=(S.custom||[]).filter(o=>o.w!==w);delete S.cards["100-"+w];syncCustom();save();toast("Đã xóa “"+w+"”");if(!TOPICS[100].words.length)go({name:"home"});else render()});
  $("#bk").onclick=()=>go({name:"home"});$("#st").onclick=()=>startStudy(T.words,{t:view.t});$("#qz").onclick=()=>startQuiz(view.t);$("#sp2").onclick=()=>startSpell(shuffle(T.words),{t:view.t});bindRows(a)}
-function row(w){const c=st(w.id);const tag=c?(c.b>=3?"✓ đã thuộc":"đang học"):"";return `<div class="row"><div class="w"><b>${esc(w.w)}</b><em>(${w.p}) ${esc(w.ipa)}</em><span>${esc(w.m)}${tag?` · <span style="display:inline;color:${c.b>=3?"var(--know)":"var(--pin)"}">${tag}</span>`:""}</span></div><button class="icon" data-say="${esc(w.w)}" aria-label="Nghe phát âm ${esc(w.w)}">${I.sound}</button></div>`}
+function row(w){const c=st(w.id);const tb=w.title?`<span class="tbadge">tên chủ đề</span>`:"";const tag=c?(c.b>=3?"✓ đã thuộc":"đang học"):"";return `<div class="row"><div class="w"><b>${esc(w.w)}</b>${tb}<em>(${w.p}) ${esc(w.ipa)}</em><span>${esc(w.m)}${tag?` · <span style="display:inline;color:${c.b>=3?"var(--know)":"var(--pin)"}">${tag}</span>`:""}</span></div><button class="icon" data-say="${esc(w.w)}" aria-label="Nghe phát âm ${esc(w.w)}">${I.sound}</button></div>`}
 function bindRows(a){a.querySelectorAll("[data-say]").forEach(b=>b.onclick=()=>speak(b.dataset.say))}
 
 /* study session */
@@ -843,7 +1186,7 @@ function Study(a){if(!sess){go({name:"home"});return}
   :`<span class="pos">${POS[w.p]}</span>${dots}<div class="mean">${esc(w.m)}</div><div class="hint">Nhớ ra từ tiếng Anh chưa? Chạm để lật</div>`;
  const back=enFront?`<span class="pos">${POS[w.p]}</span><div class="mean">${esc(w.m)}</div><div class="small-word">${esc(w.w)}</div><button class="speak" data-say>${I.sound}Nghe</button>`
   :`<span class="pos">${POS[w.p]}</span><p class="word">${esc(w.w)}</p><div class="ipa">${esc(w.ipa)}</div><button class="speak" data-say>${I.sound}Nghe</button>`;
- a.innerHTML=`<div class="top"><button class="icon" id="bk" aria-label="Thoát">${I.back}</button><div class="t"><b>${sess.meta.t?esc(TOPICS[sess.meta.t].vi):"Ôn tập"}</b><span>Còn ${sess.queue.length} thẻ</span></div></div>
+ a.innerHTML=`<div class="top"><button class="icon" id="bk" aria-label="Thoát">${I.back}</button><div class="t"><b>${sess.meta.t?esc(TOPICS[sess.meta.t].vi):(sess.meta.label||"Ôn tập")}</b><span>Còn ${sess.queue.length} thẻ</span></div></div>
  <div class="prog"><span class="bar"><i style="width:${(sess.ok/sess.total)*100}%"></i></span>${sess.ok}/${sess.total}</div>
  <div class="stage" id="stage"><span class="stamp a" id="sa">Chưa nhớ</span><span class="stamp k" id="sk">Nhớ rồi</span>
  <div class="fc" id="fc" role="button" tabindex="0" aria-label="Thẻ từ, chạm để lật"><div class="face front">${front}</div><div class="face back">${back}</div></div></div>
@@ -875,7 +1218,7 @@ function Spell(a){if(!spl){go({name:"home"});return}
  if(!spl.queue.length){a.innerHTML=`<div class="done-card"><div class="n">${spl.ok}/${spl.total}</div><p style="margin:8px 0 0;font-weight:600">từ gõ đúng ngay lần đầu, không cần gợi ý</p><p class="sub">${spl.miss.size?`Có ${spl.miss.size} từ phải xem gợi ý hoặc gõ lại. Các từ này sẽ quay lại sớm hơn trong phần ôn tập.`:"Không sai chữ nào."}</p><div class="btns">${T?`<button class="btn" id="again">Luyện lại chủ đề này</button>`:""}<button class="btn ghost" id="home">${T?"Về chủ đề":"Về ôn tập"}</button></div></div>`;
   if(T)$("#again").onclick=()=>startSpell(shuffle(T.words),spl.meta);$("#home").onclick=()=>{spl=null;go(exitTo)};return}
  const w=byId(spl.queue[0]);const left=spl.queue.length;
- const head=`<div class="top"><button class="icon" id="bk" aria-label="Thoát">${I.back}</button><div class="t"><b>${T?esc(T.vi):"Ôn tập"}: chính tả</b><span>Còn ${left} từ</span></div></div><div class="prog"><span class="bar"><i style="width:${(spl.total-left)/spl.total*100}%"></i></span>${spl.total-left}/${spl.total}</div>`;
+ const head=`<div class="top"><button class="icon" id="bk" aria-label="Thoát">${I.back}</button><div class="t"><b>${T?esc(T.vi):(spl.meta.label||"Ôn tập")}: chính tả</b><span>Còn ${left} từ</span></div></div><div class="prog"><span class="bar"><i style="width:${(spl.total-left)/spl.total*100}%"></i></span>${spl.total-left}/${spl.total}</div>`;
  if(spl.phase==="input"){const letters=(w.w.match(/[a-zé]/gi)||[]).length;
   a.innerHTML=head+`<div class="q"><span class="chip">${POS[w.p]}</span><div class="mean" style="margin-top:12px">${esc(w.m)}</div><div class="pattern">${esc(hintText(w,spl.hint))}</div><div class="sub" style="font-size:13px;margin-top:4px">${letters} chữ cái</div></div>
   <input class="spell" id="ans" type="text" value="${esc(spl.typed)}" placeholder="Gõ từ tiếng Anh" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="done" aria-label="Gõ từ tiếng Anh">
@@ -917,27 +1260,67 @@ function Quiz(a){if(!qz){go({name:"home"});return}const T=TOPICS[qz.t];
  a.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{qz.picked=+b.dataset.i;const ok=it.opts[qz.picked].id===it.w.id;if(ok){qz.score++;if(!seen(it.w.id))grade(it.w.id,true)}else{grade(it.w.id,false);qz.wrong.push(it.w)}if(!en)speak(it.w.w);render()});
  const nx=$("#nx");if(nx)nx.onclick=()=>{qz.i++;qz.picked=null;render()}}
 
-function Review(a){const d=dueList();const learning=ALL.filter(w=>seen(w.id)&&!known(w.id));
+function Review(a){const d=dueList();
+ const rv=S.rv=Object.assign({src:"topics",topics:[],mode:"flip",n:20},S.rv||{});
+ const learned=ALL.filter(w=>seen(w.id));
+ const lapsed=ALL.filter(w=>((st(w.id)||{}).l||0)>0).sort((x,y)=>st(y.id).l-st(x.id).l||st(x.id).b-st(y.id).b);
+ const p=rv.src==="topics"?ALL.filter(w=>rv.topics.includes(w.t)):rv.src==="learned"?learned:lapsed;
+ const take=rv.n?Math.min(rv.n,p.length):p.length;
+ const segBtn=(k,v,l)=>`<button data-${k}="${v}" aria-pressed="${String(rv[k])===String(v)}">${l}</button>`;
+ let topicsHtml="";
+ if(rv.src==="topics"){topicsHtml=`<div class="lbl-row"><span class="lbl">Chủ đề · đã chọn ${rv.topics.length}</span><button class="linkbtn" id="tAll" style="margin:0">${rv.topics.length>=NT?"Bỏ chọn hết":"Chọn tất cả"}</button></div>`+topicPicker(rv.topics)}
+ const emptyMsg=rv.src==="topics"?"Chọn ít nhất 1 chủ đề để bắt đầu.":rv.src==="learned"?"Chưa có từ nào đã học. Hãy học một chủ đề trước.":"Chưa có từ nào bị quên. Từ đã học mà bạn chấm “Chưa nhớ” hoặc gõ sai sẽ vào đây, từ quên nhiều lần nhất đứng đầu.";
  a.innerHTML=`<h1>Ôn tập</h1><p class="sub">Từ bạn đã học sẽ quay lại sau 1, 3, 7, 14 rồi 30 ngày. Mỗi lần nhớ đúng, khoảng cách dài thêm; quên thì bắt đầu lại.</p>
  <div class="today"><div class="in"><div class="n">${d.length}</div><div class="l">từ đến hạn ôn hôm nay</div></div></div>
  <div class="modes"><button class="mode" id="mFlip" ${d.length?"":"disabled"}><b>Lật thẻ</b><span>Nhìn từ, nhớ nghĩa rồi tự chấm</span></button><button class="mode" id="mSpell" ${d.length?"":"disabled"}><b>Chính tả</b><span>Nhìn nghĩa, gõ lại từ tiếng Anh</span></button></div>
- ${!d.length?`<div class="empty">${seen?"":""}${Object.keys(S.cards).length?"Hôm nay bạn đã ôn hết. Có thể học thêm một chủ đề mới.":"Chưa có từ nào để ôn. Hãy học một chủ đề trước."}</div>`:""}
- ${learning.length?`<h2>Từ đang học (${learning.length})</h2><p class="sub" style="margin-bottom:10px">Luyện thêm ${Math.min(20,learning.length)} từ chưa thuộc, chọn ngẫu nhiên:</p><div class="modes" style="margin-top:0"><button class="mode" id="xFlip"><b>Lật thẻ</b><span>Tự chấm nhớ / chưa nhớ</span></button><button class="mode" id="xSpell"><b>Chính tả</b><span>Gõ lại từ tiếng Anh</span></button></div>`:""}`;
- $("#mFlip").onclick=()=>startReview("flip");$("#mSpell").onclick=()=>startReview("spell");const pick=()=>shuffle(learning).slice(0,20);const xf=$("#xFlip");if(xf){xf.onclick=()=>startStudy(pick(),{review:true});$("#xSpell").onclick=()=>startSpell(pick(),{review:true})}}
+ ${!d.length?`<div class="empty" style="padding:20px 10px 0">${Object.keys(S.cards).length?"Hôm nay bạn đã ôn hết từ đến hạn.":"Chưa có từ nào đến hạn. Hãy học một chủ đề trước."}</div>`:""}
+ <h2>Tự chọn phạm vi ôn</h2>
+ <div class="panel">
+  <span class="lbl" style="margin-top:0">Ôn từ đâu</span>
+  <div class="seg">${segBtn("src","topics","Theo chủ đề")}${segBtn("src","learned",`Đã học (${learned.length})`)}${segBtn("src","lapse",`Hay quên (${lapsed.length})`)}</div>
+  ${topicsHtml}
+  <span class="lbl">Kiểu ôn</span>
+  <div class="seg">${segBtn("mode","flip","Lật thẻ")}${segBtn("mode","spell","Chính tả")}</div>
+  <span class="lbl">Số từ mỗi lượt</span>
+  <div class="seg">${segBtn("n",10,"10")}${segBtn("n",20,"20")}${segBtn("n",30,"30")}${segBtn("n",0,"Tất cả")}</div>
+  <button class="btn" id="goCustom" style="width:100%;margin-top:16px" ${p.length?"":"disabled"}>${p.length?`Bắt đầu ôn ${take} từ`:"Chưa có từ để ôn"}</button>
+  ${p.length?"":`<p class="sub" style="margin-top:8px;text-align:center">${emptyMsg}</p>`}
+ </div>`;
+ $("#mFlip").onclick=()=>startReview("flip");$("#mSpell").onclick=()=>startReview("spell");
+ const upd=()=>{save();render()};
+ a.querySelectorAll("[data-src]").forEach(b=>b.onclick=()=>{rv.src=b.dataset.src;upd()});
+ a.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{rv.mode=b.dataset.mode;upd()});
+ a.querySelectorAll("[data-n]").forEach(b=>b.onclick=()=>{rv.n=+b.dataset.n;upd()});
+ bindPicker(a,()=>rv.topics,v=>{rv.topics=v;upd()});
+ const ta=$("#tAll");if(ta)ta.onclick=()=>{rv.topics=rv.topics.length>=NT?[]:Object.keys(TOPICS).map(Number);upd()};
+ $("#goCustom").onclick=()=>{const ws=rv.src==="lapse"?shuffle(p.slice(0,take)):shuffle(p).slice(0,take);if(!ws.length)return;if(rv.mode==="spell")startSpell(ws,{review:true});else startStudy(ws,{review:true})}}
 
+function topicPicker(sel){return cats().map(([name,f,t])=>{const ids=[];for(let i=f;i<=t;i++)ids.push(i);const all=ids.every(i=>sel.includes(i));return `<button class="catlbl" data-cat="${f}-${t}" aria-pressed="${all}"><span class="tick"></span>${name}</button><div class="chips">${ids.map(i=>{const x=topicStats(i);return `<button class="chipbtn" data-tp="${i}" aria-pressed="${sel.includes(i)}">${esc(TOPICS[i].vi)}${x.s?` <small>${x.k}/${x.n}</small>`:""}</button>`}).join("")}</div>`}).join("")}
+function bindPicker(a,get,set){a.querySelectorAll("[data-tp]").forEach(b=>b.onclick=()=>{const i=+b.dataset.tp,sel=get();set(sel.includes(i)?sel.filter(x=>x!==i):[...sel,i])});
+ a.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{const [f,t]=b.dataset.cat.split("-").map(Number);const ids=[];for(let i=f;i<=t;i++)ids.push(i);const sel=get();const all=ids.every(i=>sel.includes(i));set(all?sel.filter(x=>!ids.includes(x)):[...new Set([...sel,...ids])])})}
 let q="";
-function Search(a){a.innerHTML=`<h1>Tra từ</h1><input class="search" id="q" type="search" placeholder="Gõ từ tiếng Anh hoặc nghĩa tiếng Việt" value="${esc(q)}" autocomplete="off"><div id="res"></div>`;
- const inp=$("#q");const run=()=>{q=inp.value;const s=q.trim().toLowerCase();const norm=x=>x.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d");
-  const r=s?ALL.filter(w=>w.w.toLowerCase().includes(s)||norm(w.m.toLowerCase()).includes(norm(s))).slice(0,60):[];
-  $("#res").innerHTML=s?(r.length?r.map(w=>row(w).replace('<div class="w">',`<div class="w"><span style="font-size:12px;color:var(--muted)">${esc(TOPICS[w.t].vi)}</span>`)).join(""):`<div class="empty">Không thấy “${esc(q)}” trong 600 từ. Thử gõ ngắn hơn hoặc gõ nghĩa tiếng Việt.</div>`):`<div class="empty">Tìm theo từ tiếng Anh (vd: invoice) hoặc nghĩa (vd: hóa đơn, có thể gõ không dấu).</div>`;bindRows($("#res"))};
- inp.oninput=run;run()}
+function Search(a){
+ a.innerHTML=`<h1>Tra từ</h1><input class="search" id="q" type="search" placeholder="Gõ từ tiếng Anh, nghĩa hoặc tên chủ đề" value="${esc(q)}" autocomplete="off" autocapitalize="none" enterkeyhint="search"><div id="res"></div>`;
+ const inp=$("#q");
+ const run=()=>{q=inp.value;const norm=x=>String(x).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d").replace(/[’']/g,"'").trim();const s=norm(q);
+  if(!s){$("#res").innerHTML=`<div class="empty">Tìm theo từ tiếng Anh (vd: correspondence), nghĩa tiếng Việt (vd: hóa đơn) hoặc tên chủ đề. Gõ không dấu cũng được.</div>`;return}
+  const score=w=>{const ww=norm(w.w);if(ww===s||w.alt.includes(s))return 0;if(ww.startsWith(s)||w.alt.some(x=>x.startsWith(s)))return 1;if(ww.includes(s)||w.alt.some(x=>x.includes(s)))return 2;if(norm(w.m).includes(s))return 3;return 9};
+  const r=ALL.map(w=>[score(w),w]).filter(x=>x[0]<9).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
+  const tps=Object.values(TOPICS).filter(T=>T.words.length&&(norm(T.en).includes(s)||norm(T.vi).includes(s)));
+  let h="";
+  if(r.length)h+=`<h2>Từ vựng (${r.length})</h2>`+r.slice(0,120).map(w=>row(w).replace('<div class="w">',`<div class="w"><span style="font-size:12px;color:var(--muted)">${esc(TOPICS[w.t].vi)}</span>`)).join("");
+  if(tps.length)h+=`<h2>Chủ đề (${tps.length})</h2>`+tps.map(T=>{const x=topicStats(T.id);return `<button class="topic" data-t="${T.id}"><span class="num ${x.k===x.n?"done":""}">${T.id===100?"★":T.id}</span><span class="nm"><b>${esc(T.vi)}</b><span>${esc(T.en)} · ${x.n} từ</span></span><span class="mini"><span class="bar"><i style="width:${x.k/x.n*100}%"></i></span><small>${x.k}/${x.n}</small></span></button>`}).join("");
+  if(!h)h=`<div class="empty">Không thấy “${esc(q)}” trong ${ALL.length} từ của app. Thử gõ ngắn hơn hoặc gõ nghĩa tiếng Việt.</div>`;
+  $("#res").innerHTML=h;bindRows($("#res"));
+  $("#res").querySelectorAll(".topic").forEach(b=>b.onclick=()=>go({name:"topic",t:+b.dataset.t}))};
+ inp.oninput=run;inp.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();inp.blur()}};run()}
 
 function Settings(a){a.innerHTML=`<h1>Cài đặt</h1>
  <div class="setting"><div><b>Mặt trước thẻ</b><p class="sub">Chọn chiều học</p></div></div>
  <div class="seg" role="group"><button data-d="en" aria-pressed="${S.dir==="en"}">Anh → Việt</button><button data-d="vi" aria-pressed="${S.dir==="vi"}">Việt → Anh</button></div>
  <div class="setting" style="margin-top:8px"><div><b>Tự đọc phát âm</b><p class="sub">Đọc từ tiếng Anh khi thẻ hiện ra</p></div><button class="switch" role="switch" id="sp" aria-checked="${S.autoSpeak}" aria-label="Tự đọc phát âm"></button></div>
  <div class="setting"><div><b>Xóa tiến độ</b><p class="sub">Đưa toàn bộ 600 từ về chưa học</p></div><button class="btn ghost" id="rs">Xóa</button></div>
- <p class="sub" style="margin-top:20px;font-size:13px">Nguồn từ vựng: tài liệu “600 từ vựng TOEIC theo chủ đề thường gặp” của ZIM Academy, đã chỉnh lại nghĩa cho ngắn gọn.</p>`;
+ <p class="sub" style="margin-top:20px;font-size:13px">Nguồn từ vựng: tài liệu “600 từ vựng TOEIC theo chủ đề thường gặp” của ZIM Academy, đã chỉnh lại nghĩa cho ngắn gọn, mỗi chủ đề chỉ giữ một dạng của mỗi từ. Chủ đề 51–70 được bổ sung thêm. Các từ trong tên chủ đề cũng là thẻ học (đánh dấu “tên chủ đề”).</p>`;
  a.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{S.dir=b.dataset.d;save();render()});
  $("#sp").onclick=()=>{S.autoSpeak=!S.autoSpeak;save();render()};
  $("#rs").onclick=()=>{if(confirm("Xóa toàn bộ tiến độ học? Không thể hoàn tác.")){S.cards={};S.streak={last:"",n:0};save();toast("Đã xóa tiến độ");render()}}}
