@@ -155,6 +155,8 @@ h2{font-size:15px;font-weight:600;margin:28px 0 10px;color:var(--muted)}
 .studybar{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:14px;margin:12px 0 4px}
 .studybar>span{display:block;font-size:14px;font-weight:600;margin-bottom:10px}
 .tbadge{display:inline-block;margin-left:6px;font-size:11px;font-weight:600;color:var(--margin);border:1px solid var(--margin);border-radius:6px;padding:0 5px;vertical-align:2px}
+.dictbtn2{width:100%;margin-top:12px;text-align:left;border:1px dashed var(--margin);background:var(--card);border-radius:16px;padding:12px 16px}
+.dictbtn2 b{display:block;font-size:15px}.dictbtn2 span{display:block;font-size:13px;color:var(--muted)}
 /* nav */
 nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);z-index:20}
 nav .in{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
@@ -1107,17 +1109,68 @@ syncCustom();
 function cats(){return TOPICS[100].words.length?[["Sổ từ của tôi",100,100],...CATS]:CATS}
 let dbRef=null,saveT=null;
 function save(){S.updated=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
-  if(dbRef){clearTimeout(saveT);saveT=setTimeout(()=>{dbRef.set(JSON.parse(JSON.stringify(S))).catch(()=>{})},1200)}}
+  if(dbRef){clearTimeout(saveT);saveT=setTimeout(()=>{dbRef.set(JSON.parse(JSON.stringify(S))).catch(()=>{})},1200)}
+  try{sbSchedule()}catch(e){}}
 (async()=>{try{if(!window.claude||!claude.use)return;const [db,user]=await Promise.all([claude.use("db"),claude.use("user")]);if(!db||!user)return;
   const id=await user.id();if(!id)return;const ref=db.collection("data/users/"+id).doc("progress");const snap=await ref.get();dbRef=ref;
   if(snap.exists){const d=migrate(Object.assign({},snap.data()));if(d&&(d.updated||0)>(S.updated||0)){S=Object.assign(S,d);syncCustom();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){};render()}}
   else if(S.updated)save();}catch(e){}})();
 
+/* ===== Đồng bộ Supabase (chỉ chạy ở bản tự host, ví dụ GitHub Pages) ===== */
+const SUPABASE_URL = "";        // dán Project URL, ví dụ "https://abcdxyz.supabase.co"
+const SUPABASE_ANON_KEY = "";   // dán anon public key (KHÔNG dán service_role key)
+const SB={on:false,client:null,uid:null,email:"",rowId:null,state:"off",at:0,err:"",timer:null,busy:false};
+function mergeState(l,r){if(!r||typeof r!=="object")return l;const o=Object.assign({},l);
+ const reset=Math.max(l.resetAt||0,r.resetAt||0);o.resetAt=reset;const cards={};
+ for(const src of [r.cards||{},l.cards||{}])for(const [k,v] of Object.entries(src)){if(!v||(v.u||0)<reset)continue;const e=cards[k];if(!e||(v.u||0)>(e.u||0)||((v.u||0)===(e.u||0)&&v.b>e.b))cards[k]=v}
+ o.cards=cards;const newer=(r.updated||0)>(l.updated||0)?r:l;
+ for(const k of ["dir","autoSpeak","rv","sf"])if(newer[k]!==undefined)o[k]=newer[k];
+ const ls=l.streak||{last:"",n:0},rs=r.streak||{last:"",n:0};o.streak=(rs.last>ls.last||(rs.last===ls.last&&rs.n>ls.n))?rs:ls;
+ const cu={};for(const x of [...(r.custom||[]),...(l.custom||[])])cu[x.w.toLowerCase()]=x;o.custom=Object.values(cu);
+ o.updated=Math.max(l.updated||0,r.updated||0);o.v=2;return o}
+function sbStatus(st,err){SB.state=st;SB.err=err||"";if(st==="ok")SB.at=Date.now();const el=document.getElementById("syncline");if(el)el.textContent=syncText()}
+function syncText(){if(SB.state==="busy")return"Đang đồng bộ…";if(SB.state==="err")return"Chưa đồng bộ được ("+SB.err+"). App sẽ thử lại khi có mạng.";if(SB.at){const d=new Date(SB.at);return"Đã đồng bộ lúc "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")}return"Chưa đồng bộ"}
+async function sbFetch(){const {data,error}=await SB.client.from("progress").select("id, data, updated_at").eq("user_id",SB.uid).eq("is_deleted",false).maybeSingle();if(error)throw error;return data}
+async function sbSync(){if(!SB.uid||SB.busy)return;SB.busy=true;sbStatus("busy");
+ try{const row=await sbFetch();const payload=()=>JSON.parse(JSON.stringify(S));
+  if(row){SB.rowId=row.id;const before=JSON.stringify(S);S=mergeState(S,row.data);syncCustom();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+   if(JSON.stringify(row.data)!==JSON.stringify(S)){const {error}=await SB.client.from("progress").update({data:payload()}).eq("id",row.id).eq("user_id",SB.uid).eq("is_deleted",false);if(error)throw error}
+   if(before!==JSON.stringify(S))render()}
+  else{const {data,error}=await SB.client.from("progress").insert({user_id:SB.uid,data:payload()}).select("id").single();if(error)throw error;SB.rowId=data.id}
+  sbStatus("ok")}catch(e){sbStatus("err",(e&&e.message)?String(e.message).slice(0,80):"lỗi mạng")}
+ finally{SB.busy=false}}
+function sbSchedule(){if(!SB.uid)return;clearTimeout(SB.timer);SB.timer=setTimeout(sbSync,3000)}
+async function sbOnLogin(user){if(!user)return;const firstLogin=SB.uid!==user.id;SB.uid=user.id;SB.email=user.email||"";
+ if(firstLogin&&S.owner&&S.owner!==user.id){const keep={dir:S.dir,autoSpeak:S.autoSpeak};S={v:2,cards:{},dir:keep.dir,autoSpeak:keep.autoSpeak,streak:{last:"",n:0},updated:0,custom:[]};syncCustom()}
+ S.owner=user.id;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){};await sbSync();render()}
+async function sbSignOut(){try{await SB.client.auth.signOut()}catch(e){}clearTimeout(SB.timer);SB.uid=null;SB.email="";SB.rowId=null;SB.at=0;
+ S={v:2,cards:{},dir:S.dir,autoSpeak:S.autoSpeak,streak:{last:"",n:0},updated:0,custom:[]};syncCustom();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){};sbStatus("off");render()}
+(function(){if(!SUPABASE_URL||!SUPABASE_ANON_KEY||window.claude)return;SB.on=true;
+ const sc=document.createElement("script");sc.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js";
+ sc.onload=async()=>{try{SB.client=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+  SB.client.auth.onAuthStateChange((ev,session)=>{if(ev==="SIGNED_IN"&&session&&session.user&&SB.uid!==session.user.id)sbOnLogin(session.user)});
+  const {data}=await SB.client.auth.getSession();if(data&&data.session)await sbOnLogin(data.session.user);else render()}catch(e){sbStatus("err","không tải được thư viện")}};
+ sc.onerror=()=>{SB.on=false;render()};document.head.appendChild(sc);
+ document.addEventListener("visibilitychange",()=>{if(!SB.uid)return;if(document.visibilityState==="visible")sbSync();else{clearTimeout(SB.timer);sbSync()}});
+ window.addEventListener("online",()=>{if(SB.uid)sbSync()})})();
+function syncPanel(){if(!SB.on)return"";
+ if(!SB.client)return`<h2>Tài khoản & đồng bộ</h2><p class="sub">Đang tải…</p>`;
+ if(SB.uid)return`<h2>Tài khoản & đồng bộ</h2><div class="panel"><b style="word-break:break-all">${esc(SB.email)}</b><p class="sub" id="syncline" style="margin-top:4px">${esc(syncText())}</p><div class="actions" style="margin-top:12px"><button class="btn" id="sbNow">Đồng bộ ngay</button><button class="btn ghost" id="sbOut">Đăng xuất</button></div></div>`;
+ return`<h2>Tài khoản & đồng bộ</h2><div class="panel"><p class="sub" style="margin:0 0 10px">Đăng nhập để tiến độ đồng bộ giữa Safari, app ngoài màn hình chính và các máy khác.</p>
+ <input class="search" id="sbEmail" type="email" placeholder="Email" autocomplete="email" autocapitalize="none" style="margin-top:0">
+ <input class="search" id="sbPass" type="password" placeholder="Mật khẩu (ít nhất 6 ký tự)" autocomplete="current-password" style="margin-top:8px">
+ <div class="actions" style="margin-top:12px"><button class="btn" id="sbIn">Đăng nhập</button><button class="btn ghost" id="sbUp">Tạo tài khoản</button></div><p class="sub" id="sbMsg" style="margin-top:8px;font-size:13px"></p></div>`}
+function bindSync(a){const now=$("#sbNow");if(now)now.onclick=()=>sbSync();const out=$("#sbOut");if(out)out.onclick=()=>{if(confirm("Đăng xuất? Tiến độ vẫn lưu trên tài khoản, máy này sẽ về trạng thái trống."))sbSignOut()};
+ const msg=t=>{const m=$("#sbMsg");if(m)m.textContent=t};const cred=()=>({email:$("#sbEmail").value.trim(),password:$("#sbPass").value});
+ const vi=e=>{const m=String(e&&e.message||"");if(/Invalid login/i.test(m))return"Sai email hoặc mật khẩu.";if(/already registered/i.test(m))return"Email này đã có tài khoản, hãy bấm Đăng nhập.";if(/Email not confirmed/i.test(m))return"Email chưa được xác nhận. Mở email xác nhận rồi đăng nhập lại.";if(/at least 6/i.test(m))return"Mật khẩu cần ít nhất 6 ký tự.";if(/rate limit/i.test(m))return"Thử quá nhiều lần, đợi vài phút rồi thử lại.";return m||"Có lỗi, thử lại sau."};
+ const inB=$("#sbIn");if(inB)inB.onclick=async()=>{const c=cred();if(!c.email||!c.password){msg("Nhập email và mật khẩu.");return}msg("Đang đăng nhập…");const {data,error}=await SB.client.auth.signInWithPassword(c);if(error){msg(vi(error));return}await sbOnLogin(data.user)};
+ const upB=$("#sbUp");if(upB)upB.onclick=async()=>{const c=cred();if(!c.email||c.password.length<6){msg("Nhập email và mật khẩu từ 6 ký tự.");return}msg("Đang tạo tài khoản…");const {data,error}=await SB.client.auth.signUp(c);if(error){msg(vi(error));return}if(data.session)await sbOnLogin(data.user);else msg("Đã tạo tài khoản. Mở email xác nhận, sau đó quay lại đây bấm Đăng nhập.")}}
+
 const st=id=>S.cards[id];
 const known=id=>{const c=st(id);return c&&c.b>=3};
 const seen=id=>!!st(id);
 function dueList(){const now=Date.now();return ALL.filter(x=>{const c=st(x.id);return c&&c.b<5&&c.d<=now}).concat(ALL.filter(x=>{const c=st(x.id);return c&&c.b>=5&&c.d<=now}))}
-function grade(id,ok){const had=!!S.cards[id];const c=S.cards[id]||{b:0,d:0};if(ok){c.b=Math.min(5,(had?c.b:0)+1)}else{if(had)c.l=(c.l||0)+1;c.b=0}c.d=Date.now()+INTERVALS[c.b]*DAY-(c.b?36e5*2:0);S.cards[id]=c;bumpStreak();save()}
+function grade(id,ok){const had=!!S.cards[id];const c=S.cards[id]||{b:0,d:0};if(ok){c.b=Math.min(5,(had?c.b:0)+1)}else{if(had)c.l=(c.l||0)+1;c.b=0}c.d=Date.now()+INTERVALS[c.b]*DAY-(c.b?36e5*2:0);c.u=Date.now();S.cards[id]=c;bumpStreak();save()}
 function today(){const d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
 function bumpStreak(){const t=today();if(S.streak.last===t)return;const y=new Date(Date.now()-DAY);const ys=y.getFullYear()+"-"+(y.getMonth()+1)+"-"+y.getDate();S.streak.n=S.streak.last===ys?S.streak.n+1:1;S.streak.last=t}
 function topicStats(t){const ws=TOPICS[t].words;return{k:ws.filter(w=>known(w.id)).length,s:ws.filter(w=>seen(w.id)).length,n:ws.length}}
@@ -1153,11 +1206,11 @@ function render(){renderNav();const a=$("#app");({home:Home,topic:Topic,study:St
 function Home(a){const k=ALL.filter(w=>known(w.id)).length,s=ALL.filter(w=>seen(w.id)).length,due=dueList().length;
  let h=`<h1>Thẻ từ TOEIC 600</h1><p class="sub">${NT} chủ đề, ${ALL.length} từ. Học từng chủ đề, ôn lại đúng lúc sắp quên.</p>
  <div class="today"><div class="in"><div class="n">${k}<span style="font-size:20px;color:var(--muted)"> /${ALL.length}</span></div><div class="l">từ đã thuộc · ${s} từ đã gặp${S.streak.n?` · chuỗi ${S.streak.n} ngày`:""}</div><div class="bar"><i style="width:${k/ALL.length*100}%"></i></div></div>
- <button class="btn" id="goRev" ${due?"":"disabled"}>${due?`Ôn ${due} từ`:"Chưa có từ đến hạn"}</button></div>`;
+ <button class="btn" id="goRev" ${due?"":"disabled"}>${due?`Ôn ${due} từ`:"Chưa có từ đến hạn"}</button></div>${SB.on&&SB.client&&!SB.uid?`<button class="dictbtn2" id="goLogin"><b>Đăng nhập để đồng bộ tiến độ</b><span>Học trên Safari, app ngoài màn hình chính hay máy khác đều chung một tiến độ.</span></button>`:""}`;
  for(const [name,from,to] of cats()){h+=`<h2>${name}</h2><div class="cat">`;
   for(let t=from;t<=to;t++){const T=TOPICS[t],x=topicStats(t);h+=`<button class="topic" data-t="${t}"><span class="num ${x.k===x.n?"done":""}">${t===100?"★":t}</span><span class="nm"><b>${esc(T.vi)}</b><span>${esc(T.en)}</span></span><span class="mini"><span class="bar"><i style="width:${x.k/x.n*100}%"></i></span><small>${x.k}/${x.n}</small></span></button>`}
   h+="</div>"}
- a.innerHTML=h;a.querySelectorAll(".topic").forEach(b=>b.onclick=()=>go({name:"topic",t:+b.dataset.t}));const r=$("#goRev");if(r)r.onclick=()=>startReview()}
+ a.innerHTML=h;const gl=$("#goLogin");if(gl)gl.onclick=()=>go({name:"settings"});a.querySelectorAll(".topic").forEach(b=>b.onclick=()=>go({name:"topic",t:+b.dataset.t}));const r=$("#goRev");if(r)r.onclick=()=>startReview()}
 
 function Topic(a){const T=TOPICS[view.t],x=topicStats(view.t);
  a.innerHTML=`<div class="top"><button class="icon" id="bk" aria-label="Quay lại">${I.back}</button><div class="t"><b>${view.t===100?"":view.t+". "}${esc(T.vi)}</b><span>${esc(T.en)} · ${x.k}/${x.n} đã thuộc</span></div></div>
@@ -1315,15 +1368,16 @@ function Search(a){
   $("#res").querySelectorAll(".topic").forEach(b=>b.onclick=()=>go({name:"topic",t:+b.dataset.t}))};
  inp.oninput=run;inp.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();inp.blur()}};run()}
 
-function Settings(a){a.innerHTML=`<h1>Cài đặt</h1>
+function Settings(a){a.innerHTML=`<h1>Cài đặt</h1>${syncPanel()}<h2>Học tập</h2>
  <div class="setting"><div><b>Mặt trước thẻ</b><p class="sub">Chọn chiều học</p></div></div>
  <div class="seg" role="group"><button data-d="en" aria-pressed="${S.dir==="en"}">Anh → Việt</button><button data-d="vi" aria-pressed="${S.dir==="vi"}">Việt → Anh</button></div>
  <div class="setting" style="margin-top:8px"><div><b>Tự đọc phát âm</b><p class="sub">Đọc từ tiếng Anh khi thẻ hiện ra</p></div><button class="switch" role="switch" id="sp" aria-checked="${S.autoSpeak}" aria-label="Tự đọc phát âm"></button></div>
- <div class="setting"><div><b>Xóa tiến độ</b><p class="sub">Đưa toàn bộ 600 từ về chưa học</p></div><button class="btn ghost" id="rs">Xóa</button></div>
+ <div class="setting"><div><b>Xóa tiến độ</b><p class="sub">Đưa toàn bộ ${ALL.length} từ về chưa học</p></div><button class="btn ghost" id="rs">Xóa</button></div>
  <p class="sub" style="margin-top:20px;font-size:13px">Nguồn từ vựng: tài liệu “600 từ vựng TOEIC theo chủ đề thường gặp” của ZIM Academy, đã chỉnh lại nghĩa cho ngắn gọn, mỗi chủ đề chỉ giữ một dạng của mỗi từ. Chủ đề 51–70 được bổ sung thêm. Các từ trong tên chủ đề cũng là thẻ học (đánh dấu “tên chủ đề”).</p>`;
+ bindSync(a);
  a.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{S.dir=b.dataset.d;save();render()});
  $("#sp").onclick=()=>{S.autoSpeak=!S.autoSpeak;save();render()};
- $("#rs").onclick=()=>{if(confirm("Xóa toàn bộ tiến độ học? Không thể hoàn tác.")){S.cards={};S.streak={last:"",n:0};save();toast("Đã xóa tiến độ");render()}}}
+ $("#rs").onclick=()=>{if(confirm("Xóa toàn bộ tiến độ học? Không thể hoàn tác.")){S.cards={};S.streak={last:"",n:0};S.resetAt=Date.now();save();toast("Đã xóa tiến độ");render()}}}
 
 render();
 </script></body></html>
