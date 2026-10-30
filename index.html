@@ -1117,7 +1117,7 @@ function save(){S.updated=Date.now();try{localStorage.setItem(KEY,JSON.stringify
   else if(S.updated)save();}catch(e){}})();
 
 /* ===== Đồng bộ Supabase (chỉ chạy ở bản tự host, ví dụ GitHub Pages) ===== */
-const SUPABASE_URL = "https://hscpqokaukkxjzbyoxsb.supabase.co/rest/v1";        // dán Project URL, ví dụ "https://abcdxyz.supabase.co"
+const SUPABASE_URL = "https://hscpqokaukkxjzbyoxsb.supabase.co";        // dán Project URL, ví dụ "https://abcdxyz.supabase.co"
 const SUPABASE_ANON_KEY = "sb_publishable_WPsII-5BaCf-iuw9QpJr5Q_0lOgeE73";   // dán anon public key (KHÔNG dán service_role key)
 const SB={on:false,client:null,uid:null,email:"",rowId:null,state:"off",at:0,err:"",timer:null,busy:false};
 function mergeState(l,r){if(!r||typeof r!=="object")return l;const o=Object.assign({},l);
